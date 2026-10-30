@@ -1,0 +1,22 @@
+{
+  "description": {
+    "translate": "enchantment.fantasy_feudalism_items.sigil"
+  },
+  "supported_items": "#fantasy_feudalism_items:sigil_heads",
+  "primary_items": "#fantasy_feudalism_items:sigil_heads",
+  "weight": 1,
+  "max_level": 1,
+  "min_cost": {
+    "base": 30,
+    "per_level_above_first": 0
+  },
+  "max_cost": {
+    "base": 100,
+    "per_level_above_first": 0
+  },
+  "anvil_cost": 1,
+  "slots": [
+    "head"
+  ],
+  "effects": {}
+}

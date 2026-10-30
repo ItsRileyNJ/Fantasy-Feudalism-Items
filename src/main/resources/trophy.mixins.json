@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.fantasyfeudalism.items.trophy.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "HeadEnchantMixin",
+    "EnchantTableMixin",
+    "EnchantmentSupportMixin",
+    "HungerMixin",
+    "GoldDurabilityMixin",
+    "DaggerArmorMixin",
+    "HorseInventoryAccessor",
+    "HorseMenuMixin",
+    "MovementSoundMixin",
+    "MobDaggerMixin",
+    "CreeperVisibilityMixin",
+    "HorseshoeJumpMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

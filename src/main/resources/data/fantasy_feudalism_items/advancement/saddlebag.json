@@ -1,0 +1,30 @@
+{
+  "parent": "fantasy_feudalism_items:root",
+  "display": {
+    "icon": {
+      "id": "fantasy_feudalism_items:saddlebag"
+    },
+    "title": "Pack for the Road",
+    "description": "Obtain a Saddlebag",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "fantasy_feudalism_items:saddlebag"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

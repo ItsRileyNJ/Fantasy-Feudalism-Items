@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "items": "fantasy_feudalism_items:stray_head",
+      "components": {
+        "minecraft:enchantments": {
+          "levels": {
+            "fantasy_feudalism_items:sigil": 1
+          }
+        }
+      },
+      "strict": false
+    },
+    {
+      "item": "fantasy_feudalism_items:trophy_mount"
+    }
+  ],
+  "result": {
+    "id": "fantasy_feudalism_items:stray_trophy",
+    "count": 1
+  }
+}

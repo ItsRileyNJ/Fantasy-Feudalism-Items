@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "fantasy_feudalism_items:block/unlit_torch"
+    },
+    "lit=true": {
+      "model": "minecraft:block/soul_torch"
+    }
+  }
+}

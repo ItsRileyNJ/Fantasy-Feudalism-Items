@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.fantasyfeudalism.items.compat.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "LambItemLightsMixin",
+    "LambMountLightsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "CaravanStockMixin",
+    "GuardDaggerSlotMixin"
+  ]
+}

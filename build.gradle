@@ -1,0 +1,67 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+version = '0.1.0'
+group = 'com.fantasyfeudalism.items'
+base { archivesName = 'fantasy_feudalism_items' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+sourceSets {
+    gameTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations {
+    gameTestImplementation.extendsFrom implementation
+    gameTestRuntimeOnly.extendsFrom runtimeOnly
+}
+neoForge {
+    version = '21.1.262'
+    addModdingDependenciesTo sourceSets.gameTest
+    runs {
+        client {
+            client()
+            gameDirectory = project.file('run-client')
+            if (project.hasProperty('smoke')) {
+                programArguments.addAll '--quickPlaySingleplayer', 'New World'
+                systemProperty 'fantasyfeudalism.clientSmoke', 'true'
+                systemProperty 'fantasyfeudalism.smokeReport', layout.buildDirectory.file('reports/client-smoke/results.json').get().asFile.absolutePath
+            }
+        }
+        server { server(); programArgument '--nogui' }
+        gameTestServer {
+            type = 'gameTestServer'
+            systemProperty 'fantasyfeudalism.testReport', layout.buildDirectory.file("reports/gametest/results.xml").get().asFile.absolutePath
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.hasProperty('compat') ? 'fantasy_feudalism_items,fantasy_feudalism_compat' : 'fantasy_feudalism_items'
+        }
+    }
+    mods { fantasy_feudalism_items { sourceSet(sourceSets.main); sourceSet(sourceSets.gameTest) } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+
+// Include Minecraft integration tests in the normal verification lifecycle.
+tasks.named('check') { dependsOn 'runGameTestServer' }
+
+// Minecraft can exit with code zero after a mod-loading failure. Require a fresh,
+// complete report so a startup crash can never masquerade as passing tests.
+tasks.named('runGameTestServer') {
+    doFirst {
+        def report = layout.buildDirectory.file('reports/gametest/results.xml').get().asFile
+        report.parentFile.mkdirs()
+        report.delete()
+    }
+    doLast {
+        def report = layout.buildDirectory.file('reports/gametest/results.xml').get().asFile
+        if (!report.isFile()) throw new GradleException('Minecraft did not produce a current GameTest report; inspect startup logs.')
+        def xml = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(report)
+        def expected = fileTree('src/gameTest/java').matching {
+            include '**/*.java'
+            if (!project.hasProperty('compat')) exclude '**/CompatTests.java'
+        }.files.sum { source -> source.readLines().count { line -> line.trim().startsWith('@GameTest(') } }
+        def executed = xml.getElementsByTagName('testcase').length
+        if (executed != expected || executed == 0 || xml.getElementsByTagName('failure').length != 0 || xml.getElementsByTagName('skipped').length != 0)
+            throw new GradleException("GameTest verification failed: ${executed}/${expected} tests reported; inspect ${report}")
+        logger.lifecycle("Verified ${executed} Minecraft integration tests from the current run.")
+    }
+}

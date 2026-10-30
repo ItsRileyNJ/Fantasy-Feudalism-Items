@@ -1,0 +1,30 @@
+{
+  "parent": "fantasy_feudalism_items:root",
+  "display": {
+    "icon": {
+      "id": "fantasy_feudalism_items:fishing_trap"
+    },
+    "title": "River Harvest",
+    "description": "Obtain a Fishing Trap",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "fantasy_feudalism_items:fishing_trap"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

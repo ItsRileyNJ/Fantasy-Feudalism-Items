@@ -1,0 +1,33 @@
+{
+  "parent": "fantasy_feudalism_items:root",
+  "display": {
+    "icon": {
+      "id": "fantasy_feudalism_items:animal_allegiance_potion"
+    },
+    "title": "Animal Allegiance",
+    "description": "Obtain a Potion of Animal Allegiance",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fantasy_feudalism_items:animal_allegiance_potion",
+              "fantasy_feudalism_items:extended_animal_allegiance_potion"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

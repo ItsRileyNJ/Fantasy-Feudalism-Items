@@ -1,0 +1,39 @@
+{
+  "parent": "fantasy_feudalism_items:root",
+  "display": {
+    "icon": {
+      "id": "minecraft:potion"
+    },
+    "title": "A Clearer View",
+    "description": "Obtain a Potion of Clairvoyance",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion",
+              "minecraft:splash_potion",
+              "minecraft:lingering_potion"
+            ],
+            "components": {
+              "minecraft:potion_contents": {
+                "potion": "fantasy_feudalism_items:clairvoyance"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

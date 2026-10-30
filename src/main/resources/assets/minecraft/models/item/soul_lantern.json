@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/soul_lantern",
+  "overrides": [
+    {
+      "predicate": {
+        "fantasy_feudalism_items:off": 1
+      },
+      "model": "fantasy_feudalism_items:block/unlit_lantern"
+    }
+  ]
+}

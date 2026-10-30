@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HLH"
+  ],
+  "key": {
+    "H": {
+      "item": "fantasy_feudalism_items:saddlebag_half"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "id": "fantasy_feudalism_items:saddlebag",
+    "count": 1
+  }
+}

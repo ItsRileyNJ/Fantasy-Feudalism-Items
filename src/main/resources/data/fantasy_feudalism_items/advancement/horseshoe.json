@@ -1,0 +1,36 @@
+{
+  "parent": "fantasy_feudalism_items:root",
+  "display": {
+    "icon": {
+      "id": "fantasy_feudalism_items:iron_horseshoe"
+    },
+    "title": "A Better Pace",
+    "description": "Obtain a Horseshoe",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fantasy_feudalism_items:copper_horseshoe",
+              "fantasy_feudalism_items:iron_horseshoe",
+              "fantasy_feudalism_items:gold_horseshoe",
+              "fantasy_feudalism_items:diamond_horseshoe",
+              "fantasy_feudalism_items:netherite_horseshoe"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

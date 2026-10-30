@@ -1,0 +1,46 @@
+{
+  "textures": {
+    "bag": "minecraft:block/white_wool",
+    "particle": "minecraft:block/white_wool"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        4
+      ],
+      "to": [
+        14,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bag",
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#bag",
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#bag",
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#bag",
+          "tintindex": 0
+        },
+        "up": {
+          "texture": "#bag",
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#bag",
+          "tintindex": 0
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.fantasyfeudalism.items.lighting.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "TorchMixin",
+    "WallTorchMixin",
+    "LanternMixin",
+    "LightStateMixin",
+    "SunProtectionMixin",
+    "LightItemMixin",
+    "LightPlacementMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

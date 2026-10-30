@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:block/soul_torch"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "fantasy_feudalism_items:off": 1
+      },
+      "model": "fantasy_feudalism_items:block/unlit_torch"
+    }
+  ]
+}

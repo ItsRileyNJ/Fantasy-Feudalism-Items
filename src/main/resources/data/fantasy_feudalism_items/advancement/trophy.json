@@ -1,0 +1,40 @@
+{
+  "parent": "fantasy_feudalism_items:root",
+  "display": {
+    "icon": {
+      "id": "fantasy_feudalism_items:zombie_trophy"
+    },
+    "title": "A Lasting Trophy",
+    "description": "Obtain a Mob Trophy",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fantasy_feudalism_items:zombie_trophy",
+              "fantasy_feudalism_items:skeleton_trophy",
+              "fantasy_feudalism_items:creeper_trophy",
+              "fantasy_feudalism_items:wither_skeleton_trophy",
+              "fantasy_feudalism_items:stray_trophy",
+              "fantasy_feudalism_items:bogged_trophy",
+              "fantasy_feudalism_items:piglin_trophy",
+              "fantasy_feudalism_items:ender_dragon_trophy",
+              "fantasy_feudalism_items:player_trophy"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}
