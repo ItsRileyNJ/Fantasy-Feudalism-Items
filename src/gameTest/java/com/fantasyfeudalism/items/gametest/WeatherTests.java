@@ -95,4 +95,34 @@ public final class WeatherTests {
         h.succeed();
     }
 
+    @GameTest(template="empty")
+    public static void lantern_subclasses_keep_their_own_state_definitions(GameTestHelper h){
+        var plain=LanternCompatibilityBlocks.plain.defaultBlockState();
+        h.assertFalse(plain.hasProperty(BlockStateProperties.LIT),"A plain subclass is not forced to add vanilla fuel state");
+        for(var block:new LanternBlock[]{LanternCompatibilityBlocks.lightable,LanternCompatibilityBlocks.copper}){
+            var state=block.defaultBlockState();
+            h.assertTrue(state.hasProperty(BlockStateProperties.LIT),"Lightable subclasses define their lit property once");
+            h.assertFalse(state.getValue(BlockStateProperties.LIT),"Subclass defaults remain under the other mod's control");
+            h.assertTrue(state.setValue(BlockStateProperties.LIT,true).getValue(BlockStateProperties.LIT),"Subclass lanterns still switch on");
+            h.assertFalse(WeatherLighting.supported(block),"Vanilla fuel/weather policy does not take over other mods' lanterns");
+        }
+        h.assertTrue(LanternCompatibilityBlocks.copper.defaultBlockState().getValue(BlockStateProperties.HORIZONTAL_AXIS)==net.minecraft.core.Direction.Axis.Z,"Copper-style subclass preserves its axis property");
+        if(net.neoforged.fml.ModList.get().isLoaded("suppsquared")){
+            for(String name:new String[]{"copper_lantern","brass_lantern"}){
+                var id=net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("suppsquared",name);
+                var block=net.minecraft.core.registries.BuiltInRegistries.BLOCK.getOptional(id).orElseThrow();
+                var state=block.defaultBlockState();
+                h.assertTrue(block instanceof LanternBlock&&state.getValue(BlockStateProperties.LIT),"Actual "+id+" registers lit");
+                h.assertTrue(state.getLightEmission(h.getLevel(),h.absolutePos(BlockPos.ZERO))>0,"Actual "+id+" emits its own light");
+                h.assertTrue(state.setValue(BlockStateProperties.LIT,false).getLightEmission(h.getLevel(),h.absolutePos(BlockPos.ZERO))==0,"Actual "+id+" retains its own off state");
+                h.assertFalse(WeatherLighting.supported(block),"Items does not replace "+id+" fuel/weather behavior");
+            }
+            var crimson=net.minecraft.core.registries.BuiltInRegistries.BLOCK.getOptional(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("suppsquared","crimson_lantern")).orElseThrow();
+            h.assertFalse(crimson.defaultBlockState().hasProperty(BlockStateProperties.LIT),"Actual crimson lantern retains its native state without lit");
+            h.assertTrue(crimson.defaultBlockState().hasProperty(BlockStateProperties.ATTACHED),"Actual crimson lantern retains its connection state");
+            h.assertTrue(crimson.defaultBlockState().getLightEmission(h.getLevel(),h.absolutePos(BlockPos.ZERO))>0,"Actual crimson lantern retains its light emission");
+        }
+        h.succeed();
+    }
+
 }

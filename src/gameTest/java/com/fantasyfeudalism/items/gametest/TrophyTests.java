@@ -34,6 +34,17 @@ public final class TrophyTests {
         net.neoforged.neoforge.network.registration.NetworkRegistry.configureMockConnection(connection);
         player.setPos(Vec3.atCenterOf(h.absolutePos(new BlockPos(1,2,1))));return player;
     }
+    private static ServerPlayer onlinePlayer(GameTestHelper h){
+        var profile=new com.mojang.authlib.GameProfile(UUID.randomUUID(),"online-test");
+        var cookie=new net.minecraft.server.network.CommonListenerCookie(profile,0,ClientInformation.createDefault(),false,net.neoforged.neoforge.network.connection.ConnectionType.NEOFORGE);
+        var player=new ServerPlayer(h.getLevel().getServer(),h.getLevel(),profile,ClientInformation.createDefault());
+        var connection=new net.minecraft.network.Connection(net.minecraft.network.protocol.PacketFlow.SERVERBOUND);
+        new io.netty.channel.embedded.EmbeddedChannel(connection);
+        // Configure mod channels before login events send Moonlight/other mod payloads.
+        net.neoforged.neoforge.network.registration.NetworkRegistry.configureMockConnection(connection);
+        h.getLevel().getServer().getPlayerList().placeNewPlayer(connection,player,cookie);
+        return player;
+    }
     private static void select(ServerPlayer player,TrophyKind kind){var ledger=TrophyLedger.get(player.serverLevel());ledger.recordPlacement(player.getUUID(),kind);ledger.attune(player.getUUID(),kind);}
     @GameTest(template="empty")
     public static void trophies_are_owner_only_and_destruction_ends_attunement(GameTestHelper h){
@@ -105,7 +116,7 @@ public final class TrophyTests {
     }
     @GameTest(template="empty")
     public static void allegiance_first_player_wins_and_effect_end_releases(GameTestHelper h){
-        var first=h.makeMockServerPlayerInLevel();var second=h.makeMockServerPlayerInLevel();var cow=h.spawnWithNoFreeWill(EntityType.COW,2,2,2);first.setPos(cow.position());second.setPos(cow.position());
+        var first=onlinePlayer(h);var second=onlinePlayer(h);var cow=h.spawnWithNoFreeWill(EntityType.COW,2,2,2);first.setPos(cow.position());second.setPos(cow.position());
         try{
             first.addEffect(new net.minecraft.world.effect.MobEffectInstance(AnimalAllegiance.EFFECT,1200));second.addEffect(new net.minecraft.world.effect.MobEffectInstance(AnimalAllegiance.EFFECT,1200));
             h.assertTrue(AnimalAllegiance.claim(cow,first),"First affected player attracts passive animal");h.assertFalse(AnimalAllegiance.claim(cow,second),"Second affected player cannot steal attracted animal");
