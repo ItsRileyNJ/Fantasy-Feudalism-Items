@@ -41,6 +41,13 @@ public final class ClientSmoke {
             if(phase==0){
                 var type=Class.forName("dev.lambdaurora.lambdynlights.LambDynLights");var lights=type.getMethod("get").invoke(null);
                 itemManager=type.getMethod("itemLightSourceManager").invoke(lights);entityManager=type.getMethod("entityLightSourceManager").invoke(lights);
+                var before=new ItemStack(Items.LANTERN);var after=before.copy();LightItemFuel.set(after,80,true);
+                net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,before,0);
+                check(!net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,after,0),"Fuel countdown does not replay main-hand equip animation");
+                check(!net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,after,-1),"Fuel countdown does not replay offhand equip animation");
+                check(net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,after,1),"Changing hotbar slot still equips the lantern");
+                after.set(DataComponents.CUSTOM_NAME,Component.literal("Different lantern"));
+                check(net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,after,1),"Unrelated item component changes retain equip behavior");
                 check(itemLight(new ItemStack(Items.TORCH))==14,"LambDynamicLights uses vanilla torch brightness");
                 check(itemLight(new ItemStack(Items.LANTERN))==15,"LambDynamicLights uses vanilla lantern brightness");
                 var off=new ItemStack(Items.LANTERN);LightItemFuel.set(off,100,false);check(itemLight(off)==0,"Switched-off lantern produces no dynamic light");

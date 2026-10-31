@@ -215,4 +215,28 @@ public final class ContentTests {
         });
     }
 
+    @GameTest(template="empty")
+    public static void light_render_reads_and_hand_updates_preserve_item_identity(GameTestHelper h){
+        var lamp=new ItemStack(Items.LANTERN);var changed=lamp.copy();LightItemFuel.set(changed,80,true);
+        h.assertTrue(LightItemFuel.sameHeldLight(lamp,changed),"Burning fuel must not replay hand equip animation");
+        LightItemFuel.set(changed,0,false);h.assertTrue(LightItemFuel.sameHeldLight(lamp,changed),"Light switches do not put away the held item");
+        changed.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,net.minecraft.network.chat.Component.literal("Named lantern"));
+        h.assertFalse(LightItemFuel.sameHeldLight(lamp,changed),"Other item changes remain visible to the equip hook");
+        h.assertFalse(LightItemFuel.sameHeldLight(lamp,new ItemStack(Items.SOUL_LANTERN)),"Switching lantern type still equips");
+        var data=lamp.getComponents();for(int i=0;i<10000;i++)h.assertTrue(LightItemFuel.lit(lamp),"Fresh lantern remains lit");
+        h.assertTrue(lamp.getComponents()==data,"Render reads never replace item data");h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void mount_visuals_sync_only_when_appearance_changes(GameTestHelper h){
+        var horse=EntityType.HORSE.create(h.getLevel());var lamp=new ItemStack(Items.LANTERN);LightItemFuel.set(lamp,100,true);MountEquipment.set(horse,3,lamp);
+        var data=horse.getData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT);var decoded=MountVisuals.lantern(horse);
+        LightItemFuel.set(lamp,80,true);MountEquipment.set(horse,3,lamp);
+        h.assertTrue(data==horse.getData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT),"Timer-only updates do not resend mount visuals");
+        h.assertTrue(decoded==MountVisuals.lantern(horse),"Repeated frames reuse decoded items");
+        h.assertTrue(LightItemFuel.remaining(MountEquipment.item(horse,3))==80,"Server still saves exact fuel");
+        LightItemFuel.set(lamp,0,false);MountEquipment.set(horse,3,lamp);
+        h.assertTrue(data!=horse.getData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT),"Light-off transition is synchronized");
+        h.assertFalse(LightItemFuel.lit(MountVisuals.lantern(horse)),"Cached light updates after attachment replacement");h.succeed();
+    }
+
 }

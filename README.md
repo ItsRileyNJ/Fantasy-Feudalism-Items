@@ -42,3 +42,9 @@ Server configuration files are under `<world>/serverconfig/`: `fantasy_feudalism
 The cloud launcher `./scripts/cloud-gradle.sh` selects this workspace's JDK, proxy and cache. Test source lives in `src/gameTest` and is excluded from the release JAR. Tests require a fresh, complete XML report, so startup failures cannot silently pass. Client smoke checks use `runClient -Psmoke` and the prepared local `New World` fixture; this fixture is not distributed.
 
 Dynamic lighting remains client-side visual illumination and does not change server block light. Clairvoyance rendering depends on normal server entity-tracking distance. Modded bosses should join `neoforge:bosses`; custom containers should expose their item contents through standard components. Recipes and models can be regenerated with `python3 scripts/generate-content-resources.py`.
+
+## 0.1.2 performance and tooltip fixes
+
+Light brightness checks no longer copy item NBT or read server fuel configuration during rendering. Fuel-only updates no longer replay the held-light equip animation; hotbar and unrelated item changes retain normal behavior. Mounted equipment reuses decoded render stacks, synchronizes appearance changes rather than fuel countdowns, and keeps unchanged horseshoe modifiers in place. Trophy tooltips use translated, consistently colored benefit/drawback sections and explain permanent placement and attunement.
+
+Verified with the supplied LambDynamicLights, Macaw's Lights and Lamps 1.1.5, Supplementaries, Supplementaries Squared, Moonlight and Mercenaries binaries. See the validation notes for scope and limitations.

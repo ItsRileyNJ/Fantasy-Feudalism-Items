@@ -16,13 +16,24 @@ public final class LightItemFuel {
         if(stack.is(Items.TORCH))return Blocks.TORCH.defaultBlockState();if(stack.is(Items.SOUL_TORCH))return Blocks.SOUL_TORCH.defaultBlockState();
         if(stack.is(Items.LANTERN))return Blocks.LANTERN.defaultBlockState();if(stack.is(Items.SOUL_LANTERN))return Blocks.SOUL_LANTERN.defaultBlockState();return null;
     }
-    public static long remaining(ItemStack stack){var state=state(stack);if(state==null)return 0;if(WeatherLighting.soul(state))return Long.MAX_VALUE;var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();return data.contains("ff_fuel")?Math.max(0,data.getLong("ff_fuel")):LightFuel.capacity(state);}
-    public static boolean lit(ItemStack stack){return remaining(stack)>0&&!stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getBoolean("ff_off");}
+    public static long remaining(ItemStack stack){var state=state(stack);if(state==null)return 0;if(WeatherLighting.soul(state))return Long.MAX_VALUE;var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).getUnsafe();return data.contains("ff_fuel")?Math.max(0,data.getLong("ff_fuel")):LightFuel.capacity(state);}
+    /** Hot rendering path: read only, without copying NBT or accessing server configs. */
+    public static boolean lit(ItemStack stack){
+        if(state(stack)==null)return false;
+        var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).getUnsafe();
+        return !tag.getBoolean("ff_off")&&(!tag.contains("ff_fuel")||tag.getLong("ff_fuel")>0||stack.is(Items.SOUL_TORCH)||stack.is(Items.SOUL_LANTERN));
+    }
+    public static boolean sameHeldLight(ItemStack before,ItemStack after){
+        if(state(before)==null||!before.is(after.getItem()))return false;
+        var old=before.copy();var next=after.copy();
+        for(var stack:new ItemStack[]{old,next})CustomData.update(DataComponents.CUSTOM_DATA,stack,tag->{tag.remove("ff_fuel");tag.remove("ff_last_burn_tick");tag.remove("ff_last_burn_dimension");tag.remove("ff_off");});
+        return ItemStack.isSameItemSameComponents(old,next);
+    }
     public static void set(ItemStack stack,long remaining,boolean on){CustomData.update(DataComponents.CUSTOM_DATA,stack,data->{data.putLong("ff_fuel",Math.max(0,remaining));data.putBoolean("ff_off",!on);});}
     public static void advance(ItemStack stack,LivingEntity holder){advance(stack,(Entity)holder);}
     public static void advance(ItemStack stack,Entity holder){
         var state=state(stack);if(state==null||holder.level().isClientSide||holder.level().getGameTime()%20!=0||WeatherLighting.soul(state)||!lit(stack))return;
-        var previous=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
+        var previous=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).getUnsafe();
         long now=holder.level().getGameTime();String dimension=holder.level().dimension().location().toString();
         if(previous.contains("ff_last_burn_tick")&&previous.getLong("ff_last_burn_tick")==now&&previous.getString("ff_last_burn_dimension").equals(dimension))return;
         long fuel=Math.max(0,remaining(stack)-20);boolean on=fuel>0;

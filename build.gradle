@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
     id 'net.neoforged.moddev' version '2.0.148'
 }
-version = '0.1.1'
+version = '0.1.2'
 group = 'com.fantasyfeudalism.items'
 base { archivesName = 'fantasy_feudalism_items' }
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)

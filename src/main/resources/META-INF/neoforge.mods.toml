@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="fantasy_feudalism_items"
-version="0.1.1"
+version="0.1.2"
 displayName="Fantasy Feudalism Items"
 description="Medieval and fantasy equipment for the Fantasy Feudalism mod series."
 [[dependencies.fantasy_feudalism_items]]

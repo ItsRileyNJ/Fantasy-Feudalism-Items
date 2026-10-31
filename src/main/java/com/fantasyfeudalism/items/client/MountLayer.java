@@ -11,8 +11,9 @@ import net.minecraft.world.item.*;
 public final class MountLayer<T extends AbstractHorse,M extends HorseModel<T>> extends RenderLayer<T,M> {
     public MountLayer(RenderLayerParent<T,M> parent){super(parent);}
     @Override public void render(PoseStack pose,MultiBufferSource buffers,int light,T horse,float swing,float amplitude,float partial,float age,float yaw,float pitch){
-        var data=horse.getData(ModAttachments.MOUNT);var bag=data.contains("Slot4")?ItemStack.parse(horse.registryAccess(),data.getCompound("Slot4")).orElse(ItemStack.EMPTY):ItemStack.EMPTY;
-        var lantern=data.contains("Slot3")?ItemStack.parse(horse.registryAccess(),data.getCompound("Slot3")).orElse(ItemStack.EMPTY):ItemStack.EMPTY;
+        var bag=com.fantasyfeudalism.items.mount.MountVisuals.bag(horse);
+        var lantern=com.fantasyfeudalism.items.mount.MountVisuals.lantern(horse);
+        if(bag.isEmpty()&&lantern.isEmpty())return;
         pose.pushPose();((com.fantasyfeudalism.items.client.mixin.HorseBodyAccessor)getParentModel()).feudalItems$body().translateAndRotate(pose);
         if(horse.isBaby())pose.scale(.5f,.5f,.5f);
         if(!bag.isEmpty()){renderItem(bag,pose,buffers,light,horse,-.48,0,-.12,.6f);renderItem(bag,pose,buffers,light,horse,.48,0,-.12,.6f);}

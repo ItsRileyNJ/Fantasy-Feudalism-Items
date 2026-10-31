@@ -63,7 +63,7 @@ public final class TrophyBlock extends BaseEntityBlock {
             return super.place(context);
         }
         @Override public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
-            tooltip.add(net.minecraft.network.chat.Component.literal(kind.tooltip));
+            kind.appendTooltip(tooltip);
         }
     }
 }

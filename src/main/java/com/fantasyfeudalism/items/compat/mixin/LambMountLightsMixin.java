@@ -12,8 +12,7 @@ abstract class LambMountLightsMixin {
     @Inject(method="getLuminance(Lnet/minecraft/world/entity/Entity;)I",at=@At("RETURN"),cancellable=true,remap=false)
     private void feudalItems$mountedLight(Entity entity,CallbackInfoReturnable<Integer> result){
         if(!com.fantasyfeudalism.items.mount.MountEquipment.supported(entity))return;
-        var data=entity.getData(ModAttachments.MOUNT);if(!data.contains("Slot3"))return;
-        var lamp=ItemStack.parse(entity.registryAccess(),data.getCompound("Slot3")).orElse(ItemStack.EMPTY);var state=LightItemFuel.state(lamp);
+        var lamp=com.fantasyfeudalism.items.mount.MountVisuals.lantern(entity);var state=LightItemFuel.state(lamp);
         if(state!=null&&LightItemFuel.lit(lamp))result.setReturnValue(Math.max(result.getReturnValueI(),state.getLightEmission()));
     }
 }

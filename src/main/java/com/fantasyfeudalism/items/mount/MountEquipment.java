@@ -24,8 +24,9 @@ public final class MountEquipment {
         if(stack.isEmpty())horse.getPersistentData().remove("ff_equipment_"+slot);else horse.getPersistentData().put("ff_equipment_"+slot,stack.save(horse.registryAccess()));
         var visuals=horse.getData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT).copy();
         var display=stack.copy();display.remove(DataComponents.CONTAINER);
+        if(display.has(DataComponents.CUSTOM_DATA))CustomData.update(DataComponents.CUSTOM_DATA,display,tag->{tag.remove("ff_fuel");tag.remove("ff_last_burn_tick");tag.remove("ff_last_burn_dimension");});
         if(display.isEmpty())visuals.remove("Slot"+slot);else visuals.put("Slot"+slot,display.save(horse.registryAccess()));
-        horse.setData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT,visuals);
+        if(!visuals.equals(horse.getData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT)))horse.setData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT,visuals);
     }
     public static float jumpVelocity(Horse horse,float natural){
         ItemStack shoe;
@@ -49,7 +50,9 @@ public final class MountEquipment {
     }
     public static void apply(AbstractHorse horse){
         var shoe=item(horse,2).getItem();var speed=horse.getAttribute(Attributes.MOVEMENT_SPEED);var jump=horse.getAttribute(Attributes.JUMP_STRENGTH);
-        if(speed!=null){speed.removeModifier(SPEED);if(shoe instanceof Horseshoe h)speed.addTransientModifier(new AttributeModifier(SPEED,h.speed,AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));}
+        if(speed!=null){double desired=shoe instanceof Horseshoe h?h.speed:0;var existing=speed.getModifier(SPEED);
+            if(existing!=null&&existing.amount()!=desired){speed.removeModifier(SPEED);existing=null;}
+            if(desired!=0&&existing==null)speed.addTransientModifier(new AttributeModifier(SPEED,desired,AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));}
         if(jump!=null)jump.removeModifier(JUMP);
 
     }

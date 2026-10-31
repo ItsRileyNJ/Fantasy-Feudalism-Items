@@ -127,3 +127,14 @@ lang['item.'+MOD+'.vial_of_milk']='Vial of Milk'
 lang['item.'+MOD+'.awkward_milk_potion']='Awkward Milk-Based Potion'
 lang['item.'+MOD+'.intermediate_milk_potion']='Intermediate Potion'
 write(f'assets/{MOD}/lang/en_us.json',lang)
+
+# Trophy descriptions are separate translatable lines with shared instructions.
+import re
+source=(ROOT.parents[2]/'src/main/java/com/fantasyfeudalism/items/trophy/TrophyKind.java').read_text()
+lang=json.loads((ROOT/f'assets/{MOD}/lang/en_us.json').read_text())
+base='tooltip.'+MOD+'.trophy.'
+lang.update({base+'bonus':'While attuned:',base+'drawback':'Drawback:',base+'attune':'Place, then right-click to attune. One active trophy.',base+'limit':'Only you can attune. One placement per type, ever.',base+'permanent':'Cannot be recovered. Breaking ends attunement.'})
+for kind,benefits,drawbacks in re.findall(r'([A-Z_]+)\(new String\[\]\{([^}]+)\},new String\[\]\{([^}]+)\}\)',source):
+ for category,values in [('benefit',benefits),('drawback',drawbacks)]:
+  for index,line in enumerate(re.findall(r'"([^"\n]+)"',values)):lang[base+kind.lower()+'.'+category+'.'+str(index)]=line
+write(f'assets/{MOD}/lang/en_us.json',lang)
