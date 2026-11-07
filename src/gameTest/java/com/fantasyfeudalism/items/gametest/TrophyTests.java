@@ -99,6 +99,24 @@ public final class TrophyTests {
         h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"New trophy is the only active selection");h.succeed();
     }
     @GameTest(template="empty")
+    public static void player_trophy_keeps_full_nametag_drawback_while_crouched(GameTestHelper h){
+        var player=h.makeMockPlayer(GameType.SURVIVAL);
+        player.setShiftKeyDown(true);
+        h.assertTrue(player.isDiscrete(),"Crouching normally uses discrete nametag rendering");
+        h.assertTrue(TrophyNameRules.discrete(player,player.isDiscrete()),"Unattuned players retain vanilla crouching visibility");
+        player.setData(com.fantasyfeudalism.items.content.ModAttachments.TROPHY,TrophyKind.PLAYER.ordinal());
+        h.assertFalse(TrophyNameRules.discrete(player,player.isDiscrete()),"Player Trophy prevents crouching from hiding or dimming the nametag");
+        h.assertTrue(64*TrophyNameRules.distanceMultiplier(player)==96,"Crouched attuned players keep the full 96-block name range");
+        player.setShiftKeyDown(false);
+        h.assertFalse(TrophyNameRules.discrete(player,player.isDiscrete()),"Standing attuned players retain normal visibility");
+        h.assertTrue(64*TrophyNameRules.distanceMultiplier(player)==96,"Standing and crouching use the same extended range");
+        player.setShiftKeyDown(true);player.setData(com.fantasyfeudalism.items.content.ModAttachments.TROPHY,TrophyKind.CREEPER.ordinal());
+        h.assertTrue(TrophyNameRules.discrete(player,player.isDiscrete()),"Switching away restores crouching visibility immediately");
+        h.assertTrue(TrophyNameRules.distanceMultiplier(player)==1,"Other trophies do not extend nametag range");
+        var cow=h.spawnWithNoFreeWill(EntityType.COW,3,2,3);cow.setData(com.fantasyfeudalism.items.content.ModAttachments.TROPHY,TrophyKind.PLAYER.ordinal());
+        h.assertTrue(TrophyNameRules.discrete(cow,true)&&TrophyNameRules.distanceMultiplier(cow)==1,"The drawback applies only to players");h.succeed();
+    }
+    @GameTest(template="empty")
     public static void trophy_combat_percentages(GameTestHelper h){
         var player=player(h);var victim=h.spawnWithNoFreeWill(EntityType.COW,3,2,3);
         select(player,TrophyKind.STRAY);var hit=new LivingIncomingDamageEvent(victim,new DamageContainer(h.getLevel().damageSources().playerAttack(player),10));TrophyEffects.damage(hit);h.assertTrue(Math.abs(hit.getAmount()-11.5)<.001,"Stray gives fifteen percent damage bonus");h.assertTrue(victim.hasEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN),"Stray applies Slowness");

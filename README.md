@@ -41,7 +41,7 @@ Server configuration files are under `<world>/serverconfig/`: `fantasy_feudalism
 
 The cloud launcher `./scripts/cloud-gradle.sh` selects this workspace's JDK, proxy and cache. Test source lives in `src/gameTest` and is excluded from the release JAR. Tests require a fresh, complete XML report, so startup failures cannot silently pass. Client smoke checks use `runClient -Psmoke` and the prepared local `New World` fixture; this fixture is not distributed.
 
-Dynamic lighting remains client-side visual illumination and does not change server block light. Clairvoyance rendering depends on normal server entity-tracking distance. Modded bosses should join `neoforge:bosses`; custom containers should expose their item contents through standard components. Recipes and models can be regenerated with `python3 scripts/generate-content-resources.py`.
+Dynamic lighting remains client-side visual illumination and does not change server block light. Clairvoyance keeps the latest server target snapshot and renders valid targets through hidden sections; it still depends on normal server entity-tracking distance. Modded bosses should join `neoforge:bosses`; custom containers should expose their item contents through standard components. Recipes and models can be regenerated with `python3 scripts/generate-content-resources.py`.
 
 ## 0.1.2 performance and tooltip fixes
 

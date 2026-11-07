@@ -4,6 +4,8 @@ All mobs and players are eligible, including invisible entities and targets thro
 
 Brewing: Water Bottle + Glowstone Dust → Thick Potion; Thick Potion + Amethyst Shard → Clairvoyance.
 
-The server selects eligible targets and sends UUIDs only to affected viewers. Clients request no targets and never change shared glowing metadata. The renderer checks the viewer's effect, world identity, dimension and short packet lease. Modded bosses can join the `neoforge:bosses` entity-type tag. Normal server entity tracking limits what clients can render.
+The server selects eligible targets and sends UUIDs only to affected viewers. Clients request no targets and never change shared glowing metadata. The renderer checks the viewer's effect, world identity, dimension and latest server target snapshot. Modded bosses can join the `neoforge:bosses` entity-type tag. Normal server entity tracking limits what clients can render.
 
 A vanilla milk bucket cures the effect normally. A Vial of Milk removes one randomly chosen harmful effect entirely. Clairvoyance is beneficial, so the vial preserves it.
+
+Target snapshots remain valid until replaced; there is no one-second expiry or dependence on world time. Client effect loss clears the cache. Highlighted targets bypass vanilla entity culling and the compiled-section gate, so walls and hidden terrain sections do not suppress their outlines. World and dimension checks still reject stale targets. Client entity tracking and third-party rendering pipelines remain relevant.

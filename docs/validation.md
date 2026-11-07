@@ -126,3 +126,33 @@ display. The selected environment
 `ccarenv_b64_Y2NhcmVudl8zN2NjYmRhNjZjMTA4MTkxOTBmYjMyZTIwMzZhMjA1Yg`
 reports desktop support with state unknown; no desktop JavaScript control tool
 was offered. In-game appearance remains unverified in this workspace.
+
+### Trophy tooltip grammar, crouched nametags and stable Clairvoyance
+
+All trophy descriptions now use consistent, grammatical wording and explicit
+units. Shared instructions explain ownership, switching, exclusive attunement
+and permanent placement. Breaking an inactive trophy is no longer described as
+ending the active attunement. The generator and English translations agree.
+
+The Player Trophy ignores crouching only for nametag range and name rendering.
+It keeps the standing 50% range extension (96 blocks with vanilla defaults) and
+standing-style visibility while crouched. Normal invisibility, camera and team
+visibility checks remain in place; other trophies and non-player entities retain
+vanilla behavior. A regression checks standing/crouched selection, switching away
+and non-player behavior.
+
+Clairvoyance no longer expires a target snapshot after one second or compares
+client world clocks. The server replaces snapshots every five ticks; empty
+snapshots clear them. Effect loss/death clears the client cache, and highlights
+still require a living, affected viewer and matching world/dimension. The render
+loop includes highlighted targets even when entity culling or an uncompiled
+terrain section would otherwise skip them. Boss/creative/operator exclusions and
+server entity-tracking limits are unchanged. Cache tests cover snapshot
+replacement, explicit clearing, world changes and wrong-dimension updates.
+
+Validation: full build and shader API checks passed, with **54/54 server tests**.
+All 29 per-trophy description translations match their source text. Rendering
+hooks compile and their invocation targets were checked against Minecraft's
+patched sources/bytecode. The graphical client remains blocked by the missing
+display described above; these results do not establish compatibility with every
+shader or entity-culling mod.

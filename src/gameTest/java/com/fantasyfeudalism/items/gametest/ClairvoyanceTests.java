@@ -207,16 +207,25 @@ public final class ClairvoyanceTests {
         } finally { buffer.release(); }
         var view = new ClairvoyanceView();
         Object world = new Object();
-        view.receive(payload, world, dimension, 100);
-        h.assertTrue(view.highlights(id, world, dimension, 100), "Affected viewer sees target");
-        h.assertFalse(view.highlights(UUID.randomUUID(), world, dimension, 100), "Unlisted entities remain unhighlighted");
-        h.assertFalse(view.highlights(id, new Object(), dimension, 100), "Reconnect clears old-world targets");
-        h.assertFalse(view.highlights(id, world, otherDimension, 100), "Dimension changes invalidate targets");
-        h.assertFalse(view.highlights(id, world, dimension, 120), "Stale packets expire");
-        view.receive(new ClairvoyancePayload(dimension, List.of()), world, dimension, 101);
-        h.assertFalse(view.highlights(id, world, dimension, 101), "Empty update clears highlights");
-        view.receive(new ClairvoyancePayload(otherDimension, List.of(id)), world, dimension, 102);
-        h.assertFalse(view.highlights(id, world, dimension, 102), "Packets from old dimensions are ignored");
+        view.receive(payload, world, dimension);
+        h.assertTrue(view.highlights(id, world, dimension), "Affected viewer sees target");
+        h.assertFalse(view.highlights(UUID.randomUUID(), world, dimension), "Unlisted entities remain unhighlighted");
+        h.assertFalse(view.highlights(id, new Object(), dimension), "Reconnect clears old-world targets");
+        h.assertFalse(view.highlights(id, world, otherDimension), "Dimension changes invalidate targets");
+        h.assertTrue(view.highlights(id, world, dimension), "Snapshot stays valid until replaced; delayed updates cannot expire highlights");
+        view.receive(new ClairvoyancePayload(otherDimension, List.of()), world, dimension);
+        h.assertTrue(view.highlights(id, world, dimension), "An old-dimension packet cannot erase the current snapshot");
+        var replacement=UUID.randomUUID();
+        view.receive(new ClairvoyancePayload(dimension,List.of(replacement)),world,dimension);
+        h.assertFalse(view.highlights(id,world,dimension),"New snapshot removes previous targets");
+        h.assertTrue(view.highlights(replacement,world,dimension),"New snapshot adds new targets");
+        view.receive(new ClairvoyancePayload(dimension, List.of()), world, dimension);
+        h.assertFalse(view.highlights(id, world, dimension), "Empty update clears highlights");
+        view.receive(new ClairvoyancePayload(otherDimension, List.of(id)), world, dimension);
+        h.assertFalse(view.highlights(id, world, dimension), "Packets from old dimensions are ignored");
+        view.receive(payload,world,dimension);
+        view.clear();
+        h.assertFalse(view.highlights(id,world,dimension),"Losing the effect explicitly clears cached targets");
         h.succeed();
     }
 }

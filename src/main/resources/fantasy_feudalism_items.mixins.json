@@ -10,7 +10,8 @@
     "TrophyNameMixin",
     "TrophyNameDistanceMixin",
     "LightHandMixin",
-    "DynamicLightMixin"
+    "DynamicLightMixin",
+    "ClairvoyanceRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -28,7 +28,7 @@ Wooden Slab Wooden Slab  Wooden Slab
 | Bogged | 15% more damage; attacks apply Poison I for four seconds, except undead | 25% more damage from Endermen, Endermites, Dragon, End Crystals and dragon breath | Poison-green dust |
 | Piglin | Gold weapons 15% more damage; gold equipment 30% less durability loss; each gold armor piece adds one armor point | XP orbs destroyed before XP or Mending | Gold dust |
 | Ender Dragon | Endermen/Endermites neutral unless attacked; Night Vision; purple player particles | Water/rain costs half a heart per second; nightly phantoms ignore sleep history | Portal |
-| Player | 15% more damage to other players | Nametag visible 50% farther away | Enchantment |
+| Player | 15% more damage to other players | Nametag visible 50% farther away, with full range and visibility even while crouching | Enchantment |
 
 Placed trophies always emit sparse particles. The owner's currently selected trophy emits them faster and denser. Tooltips describe bonuses and drawbacks. Ordinary damage, armor, enchantments and compatible effects continue stacking. Phantom spawning retains normal sky and difficulty restrictions apart from sleep history.
 
