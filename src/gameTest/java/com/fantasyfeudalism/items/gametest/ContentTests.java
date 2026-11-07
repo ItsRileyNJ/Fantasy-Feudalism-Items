@@ -50,17 +50,50 @@ public final class ContentTests {
         h.assertTrue(h.getLevel().getBlockState(pos).is(Blocks.CAULDRON),"Three vials empty the cauldron");h.succeed();
     }
     @GameTest(template="empty")
-    public static void milk_halves_effects_and_restores_fractional_food(GameTestHelper h){
+    public static void milk_removes_one_negative_effect_and_restores_fractional_food(GameTestHelper h){
         var player=player(h);player.getFoodData().setFoodLevel(10);
-        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,200,0));player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,200,1));player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,200,2));player.addEffect(new MobEffectInstance(MobEffects.JUMP,200,3));
+        var harmful=List.of(MobEffects.POISON,MobEffects.WEAKNESS,MobEffects.MOVEMENT_SLOWDOWN);
+        for(var effect:harmful)player.addEffect(new MobEffectInstance(effect,400,2));
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,200,1));
+        player.addEffect(new MobEffectInstance(MobEffects.GLOWING,300,0));
+        player.addEffect(new MobEffectInstance(FeudalItems.CLAIRVOYANCE,600,0));
         var result=Content.MILK.get().finishUsingItem(new ItemStack(Content.MILK.get()),h.getLevel(),player);
         h.assertTrue(result.is(Items.GLASS_BOTTLE),"Drinking returns a glass bottle");
-        h.assertFalse(player.hasEffect(MobEffects.MOVEMENT_SPEED),"Level I is removed");
-        h.assertTrue(player.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()==0&&player.getEffect(MobEffects.DAMAGE_BOOST).getDuration()==100,"II becomes I and duration halves");
-        h.assertTrue(player.getEffect(MobEffects.DIG_SPEED).getAmplifier()==0,"III rounds down to I");h.assertTrue(player.getEffect(MobEffects.JUMP).getAmplifier()==1,"IV becomes II");
-        h.assertTrue(player.getFoodData().getFoodLevel()==12,"First vial grants two whole food points");h.assertTrue(player.getPersistentData().getDouble("ff_milk_food_fraction")==.5,"Half point is retained");
-        Content.MILK.get().finishUsingItem(new ItemStack(Content.MILK.get()),h.getLevel(),player);h.assertTrue(player.getFoodData().getFoodLevel()==15,"Two vials restore exactly five points");
-        h.assertFalse(player.hasEffect(MobEffects.DAMAGE_BOOST),"Second vial removes remaining level-I effect");h.succeed();
+        h.assertTrue(harmful.stream().filter(player::hasEffect).count()==2,"One vial removes exactly one harmful effect");
+        for(var effect:harmful)if(player.hasEffect(effect))h.assertTrue(player.getEffect(effect).getDuration()==400&&player.getEffect(effect).getAmplifier()==2,"Other harmful effects retain their full duration and strength");
+        h.assertTrue(player.getEffect(MobEffects.MOVEMENT_SPEED).getDuration()==200&&player.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier()==1,"Beneficial effects remain unchanged");
+        h.assertTrue(player.getEffect(MobEffects.GLOWING).getDuration()==300,"Neutral effects remain unchanged");
+        h.assertTrue(player.getEffect(FeudalItems.CLAIRVOYANCE).getDuration()==600,"Clairvoyance is preserved");
+        h.assertTrue(player.getFoodData().getFoodLevel()==12,"First vial grants two whole food points");
+        h.assertTrue(player.getPersistentData().getDouble("ff_milk_food_fraction")==.5,"Half point is retained");
+        Content.MILK.get().finishUsingItem(new ItemStack(Content.MILK.get()),h.getLevel(),player);
+        h.assertTrue(player.getFoodData().getFoodLevel()==15,"Two vials restore exactly five points");
+        h.assertTrue(harmful.stream().filter(player::hasEffect).count()==1,"Each additional vial removes one more harmful effect");h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void milk_fully_removes_strong_and_infinite_negative_effects(GameTestHelper h){
+        var player=player(h);
+        player.addEffect(new MobEffectInstance(MobEffects.POISON,1200,0));
+        player.addEffect(new MobEffectInstance(MobEffects.POISON,200,3));
+        Content.MILK.get().finishUsingItem(new ItemStack(Content.MILK.get()),h.getLevel(),player);
+        h.assertFalse(player.hasEffect(MobEffects.POISON),"Removal cures the whole effect including its hidden weaker instance");
+        player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,-1,2));
+        Content.MILK.get().finishUsingItem(new ItemStack(Content.MILK.get()),h.getLevel(),player);
+        h.assertFalse(player.hasEffect(MobEffects.WEAKNESS),"Infinite harmful effects are removed entirely");h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void milk_without_negative_effects_preserves_benefits_and_bottle_consumption(GameTestHelper h){
+        var player=player(h);
+        var emptyResult=Content.MILK.get().finishUsingItem(new ItemStack(Content.MILK.get()),h.getLevel(),player);
+        h.assertTrue(emptyResult.is(Items.GLASS_BOTTLE),"Milk is safe with no active effects");
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,400,2));
+        player.addEffect(new MobEffectInstance(MobEffects.GLOWING,300,0));
+        var stack=new ItemStack(Content.MILK.get(),2);
+        var result=Content.MILK.get().finishUsingItem(stack,h.getLevel(),player);
+        h.assertTrue(result.is(Content.MILK.get())&&result.getCount()==1,"Only one vial in a stack is consumed");
+        h.assertTrue(player.getInventory().countItem(Items.GLASS_BOTTLE)==1,"Stacked vials return a glass bottle to inventory");
+        h.assertTrue(player.getEffect(MobEffects.DAMAGE_BOOST).getDuration()==400&&player.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()==2,"Milk with no harmful effects preserves beneficial effects");
+        h.assertTrue(player.getEffect(MobEffects.GLOWING).getDuration()==300,"Milk with no harmful effects preserves neutral effects");h.succeed();
     }
     @GameTest(template="empty")
     public static void animal_brewing_has_only_drinkable_forms(GameTestHelper h){

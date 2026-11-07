@@ -6,4 +6,4 @@ Brewing: Water Bottle + Glowstone Dust → Thick Potion; Thick Potion + Amethyst
 
 The server selects eligible targets and sends UUIDs only to affected viewers. Clients request no targets and never change shared glowing metadata. The renderer checks the viewer's effect, world identity, dimension and short packet lease. Modded bosses can join the `neoforge:bosses` entity-type tag. Normal server entity tracking limits what clients can render.
 
-A vanilla milk bucket cures the effect normally. A Vial of Milk applies its separate level-and-duration reduction rule; Clairvoyance is level I, so the vial removes it too.
+A vanilla milk bucket cures the effect normally. A Vial of Milk removes one randomly chosen harmful effect entirely. Clairvoyance is beneficial, so the vial preserves it.

@@ -88,3 +88,16 @@ terrain rebuilds have not been checked in a graphical client in this workspace.
 
 Shader-guard validation: the full build passed, including all shader detection
 fixture checks and all 49 dedicated-server integration tests.
+
+### Simpler Vial of Milk cleansing
+
+Each vial now removes exactly one randomly selected active effect in Minecraft's
+`HARMFUL` category, including its full strength, duration and any hidden weaker
+instance. Other harmful effects, beneficial effects (including Clairvoyance),
+and neutral effects remain unchanged. With no harmful effect, drinking still
+returns the bottle and restores the existing 2.5 food points without changing
+any effects. Cauldron filling, brewing and creative consumption are unchanged.
+
+Regression checks cover multiple harmful effects, repeated drinks, strong and
+infinite effects, hidden weaker instances, beneficial/neutral preservation,
+no active effects, stacked bottle returns and fractional food restoration.

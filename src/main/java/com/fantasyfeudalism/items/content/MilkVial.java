@@ -1,8 +1,7 @@
 package com.fantasyfeudalism.items.content;
 
-import java.util.ArrayList;
 import net.minecraft.world.*;
-import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -20,13 +19,11 @@ public final class MilkVial extends Item {
     }
     @Override public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (!level.isClientSide) {
-            for (var old : new ArrayList<>(entity.getActiveEffects())) {
-                entity.removeEffect(old.getEffect());
-                int newLevel = (old.getAmplifier() + 1) / 2;
-                int duration = old.isInfiniteDuration() ? -1 : old.getDuration() / 2;
-                if (newLevel > 0 && (duration == -1 || duration > 0))
-                    entity.addEffect(new MobEffectInstance(old.getEffect(), duration, newLevel - 1, old.isAmbient(), old.isVisible(), old.showIcon()));
-            }
+            var harmful = entity.getActiveEffects().stream()
+                .filter(effect -> effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
+                .toList();
+            if (!harmful.isEmpty())
+                entity.removeEffect(harmful.get(entity.getRandom().nextInt(harmful.size())).getEffect());
             if (entity instanceof Player player) {
                 var food = player.getFoodData();
                 double credit = food.getFoodLevel() >= 20 ? 0 : player.getPersistentData().getDouble("ff_milk_food_fraction");
