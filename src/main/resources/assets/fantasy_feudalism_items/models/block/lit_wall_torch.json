@@ -1,0 +1,6 @@
+{
+  "parent": "fantasy_feudalism_items:block/emissive_wall_torch",
+  "textures": {
+    "torch": "minecraft:block/torch"
+  }
+}

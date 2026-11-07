@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/lantern",
+  "parent": "fantasy_feudalism_items:block/lit_lantern",
   "overrides": [
     {
       "predicate": {

@@ -4,7 +4,7 @@ The README describes the other implemented systems. These rules incorporate the 
 
 ## Ownership and acquisition
 
-Each player can permanently place one trophy of each type, ever. Only its owner can attune, with one selection active at a time. Selection survives logout and unloaded trophy chunks, but death or destruction ends it. Breaking drops nothing; destruction does not restore the placement allowance. Placed trophies cannot be recovered by pistons.
+Each player can permanently place one trophy of each type, ever. Only its owner can attune, with one selection active at a time. Right-clicking another owned trophy replaces the active selection, including while holding an item; the old trophy's bonuses and drawbacks stop. Selection survives logout and unloaded trophy chunks, but death or destruction ends it. Breaking drops nothing; destruction does not restore the placement allowance. Placed trophies cannot be recovered by pistons.
 
 Normal trophy-mob head drops are configurable: 0.1% without Looting, 0.4% with I, 0.9% with II, 1.1% with III or higher. Special Player/Dragon acquisition and charged-creeper drops remain. Heads have one dedicated enchantment, **Sigil**, offered only in the level-30 enchanting-table slot with normal XP/lapis costs. It only enables crafting. No vanilla head enchantments qualify.
 

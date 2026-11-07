@@ -43,7 +43,7 @@
   "item.fantasy_feudalism_items.magma_cube_spawner_eye": "Magma Cube Spawner Eye",
   "tooltip.fantasy_feudalism_items.trophy.bonus": "While attuned:",
   "tooltip.fantasy_feudalism_items.trophy.drawback": "Drawback:",
-  "tooltip.fantasy_feudalism_items.trophy.attune": "Place, then right-click to attune. One active trophy.",
+  "tooltip.fantasy_feudalism_items.trophy.attune": "Right-click an owned trophy to attune or switch. One active trophy.",
   "tooltip.fantasy_feudalism_items.trophy.limit": "Only you can attune. One placement per type, ever.",
   "tooltip.fantasy_feudalism_items.trophy.permanent": "Cannot be recovered. Breaking ends attunement.",
   "tooltip.fantasy_feudalism_items.trophy.zombie.benefit.0": "Resistance I",

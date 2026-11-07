@@ -4,7 +4,7 @@
       "model": "fantasy_feudalism_items:block/unlit_torch"
     },
     "lit=true": {
-      "model": "minecraft:block/torch"
+      "model": "fantasy_feudalism_items:block/lit_torch"
     }
   }
 }

@@ -24,6 +24,7 @@ public final class DynamicLighting {
     private static volatile Map<Long,List<Source>> sources=Map.of();
     private static Map<Integer,Source> previous=Map.of();
     private static ClientLevel world;
+    private static final int UPDATE_INTERVAL_TICKS=3;
     private static int ticks;
     private static volatile boolean enabled;
 
@@ -66,12 +67,12 @@ public final class DynamicLighting {
             sources=Map.of();previous=Map.of();
             if(world!=null)for(long section:affected)client.levelRenderer.setSectionDirty(net.minecraft.core.SectionPos.x(section),net.minecraft.core.SectionPos.y(section),net.minecraft.core.SectionPos.z(section));
         }
-        ticks=4;
+        ticks=UPDATE_INTERVAL_TICKS-1;
     }
     @SubscribeEvent public static void tick(ClientTickEvent.Post event){
         var client=Minecraft.getInstance();
         updateShaderState(client);
-        if(!enabled||world==null||client.isPaused()||++ticks%5!=0)return;
+        if(!enabled||world==null||client.isPaused()||++ticks%UPDATE_INTERVAL_TICKS!=0)return;
         Map<Integer,Source> next=new HashMap<>();
         for(var entity:world.entitiesForRendering()){
             int light=entityLight(entity);

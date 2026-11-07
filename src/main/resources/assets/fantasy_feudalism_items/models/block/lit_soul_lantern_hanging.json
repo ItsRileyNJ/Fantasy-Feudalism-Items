@@ -1,0 +1,6 @@
+{
+  "parent": "fantasy_feudalism_items:block/emissive_hanging_lantern",
+  "textures": {
+    "lantern": "minecraft:block/soul_lantern"
+  }
+}

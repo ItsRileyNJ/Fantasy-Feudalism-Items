@@ -28,6 +28,13 @@ public final class TrophyBlock extends BaseEntityBlock {
             TrophyLedger.get((net.minecraft.server.level.ServerLevel) level).recordPlacement(player.getUUID(), kind);
         }
     }
+    @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof TrophyEntity trophy && player.getUUID().equals(trophy.owner)) {
+            useWithoutItem(state, level, pos, player, hit);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof TrophyEntity trophy && player.getUUID().equals(trophy.owner)) {
             if (!level.isClientSide) {

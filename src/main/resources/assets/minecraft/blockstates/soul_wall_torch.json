@@ -17,19 +17,19 @@
       "y": 270
     },
     "facing=east,lit=true": {
-      "model": "minecraft:block/soul_wall_torch",
+      "model": "fantasy_feudalism_items:block/lit_soul_wall_torch",
       "y": 0
     },
     "facing=south,lit=true": {
-      "model": "minecraft:block/soul_wall_torch",
+      "model": "fantasy_feudalism_items:block/lit_soul_wall_torch",
       "y": 90
     },
     "facing=west,lit=true": {
-      "model": "minecraft:block/soul_wall_torch",
+      "model": "fantasy_feudalism_items:block/lit_soul_wall_torch",
       "y": 180
     },
     "facing=north,lit=true": {
-      "model": "minecraft:block/soul_wall_torch",
+      "model": "fantasy_feudalism_items:block/lit_soul_wall_torch",
       "y": 270
     }
   }

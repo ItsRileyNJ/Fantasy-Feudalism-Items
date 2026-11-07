@@ -57,7 +57,7 @@ for kind,texture in colors.items():
  model('item/'+name,{'parent':MOD+':block/'+name})
  mod('loot_table/blocks/'+name+'.json',{'type':'minecraft:block','pools':[]})
 for itemid in ['lantern','soul_lantern']:
- write('assets/minecraft/models/item/'+itemid+'.json',{'parent':'minecraft:block/'+itemid,'overrides':[{'predicate':{MOD+':off':1},'model':MOD+':block/unlit_lantern'}]})
+ write('assets/minecraft/models/item/'+itemid+'.json',{'parent':MOD+':block/lit_'+itemid,'overrides':[{'predicate':{MOD+':off':1},'model':MOD+':block/unlit_lantern'}]})
 write(f'assets/{MOD}/lang/en_us.json',lang)
 # Original placeholder effect icon, not a modification of an existing image.
 rows=[]
@@ -107,7 +107,7 @@ for name,title,description,icon,criterion in [('clairvoyance','A Clearer View','
  mod('advancement/'+name+'.json',{'parent':MOD+':root','display':{'icon':{'id':icon},'title':title,'description':description,'frame':'task','show_toast':True,'announce_to_chat':True},'criteria':{'obtain':criterion},'requirements':[['obtain']]})
 
 for torch in ['torch','soul_torch']:
- write('assets/minecraft/models/item/'+torch+'.json',{'parent':'minecraft:item/generated','textures':{'layer0':'minecraft:block/'+torch},'overrides':[{'predicate':{MOD+':off':1},'model':MOD+':block/unlit_torch'}]})
+ write('assets/minecraft/models/item/'+torch+'.json',{'parent':'minecraft:item/generated','loader':'neoforge:item_layers','render_types':{'minecraft:cutout':[0]},'neoforge_data':{'layers':{'0':{'block_light':15,'sky_light':15,'ambient_occlusion':False}}},'textures':{'layer0':'minecraft:block/'+torch},'overrides':[{'predicate':{MOD+':off':1},'model':MOD+':block/unlit_torch'}]})
 
 for name,color in [('stray_head',(177,190,195)),('bogged_head',(102,121,71))]:
  rows=[]

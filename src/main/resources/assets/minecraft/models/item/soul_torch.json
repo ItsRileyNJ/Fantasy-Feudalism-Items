@@ -10,5 +10,20 @@
       },
       "model": "fantasy_feudalism_items:block/unlit_torch"
     }
-  ]
+  ],
+  "loader": "neoforge:item_layers",
+  "render_types": {
+    "minecraft:cutout": [
+      0
+    ]
+  },
+  "neoforge_data": {
+    "layers": {
+      "0": {
+        "block_light": 15,
+        "sky_light": 15,
+        "ambient_occlusion": false
+      }
+    }
+  }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "fantasy_feudalism_items:block/emissive_lantern",
+  "textures": {
+    "lantern": "minecraft:block/lantern"
+  }
+}

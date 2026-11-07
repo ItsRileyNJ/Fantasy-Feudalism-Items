@@ -57,6 +57,48 @@ public final class TrophyTests {
         var context=new BlockPlaceContext(owner,InteractionHand.MAIN_HAND,new ItemStack(block),hit);h.assertTrue(((BlockItem)block.asItem()).place(context)==InteractionResult.FAIL,"Same owner cannot place another of destroyed trophy type");h.succeed();
     }
     @GameTest(template="empty")
+    public static void right_clicking_another_owned_trophy_replaces_attunement(GameTestHelper h){
+        var owner=player(h);var stranger=h.makeMockPlayer(GameType.SURVIVAL);
+        var first=h.absolutePos(new net.minecraft.core.BlockPos(2,2,2));var second=h.absolutePos(new net.minecraft.core.BlockPos(4,2,2));
+        var creeper=Trophies.BLOCKS.get(TrophyKind.CREEPER).get();var skeleton=Trophies.BLOCKS.get(TrophyKind.SKELETON).get();
+        h.getLevel().setBlockAndUpdate(first,creeper.defaultBlockState());creeper.setPlacedBy(h.getLevel(),first,creeper.defaultBlockState(),owner,new ItemStack(creeper));
+        h.getLevel().setBlockAndUpdate(second,skeleton.defaultBlockState());skeleton.setPlacedBy(h.getLevel(),second,skeleton.defaultBlockState(),owner,new ItemStack(skeleton));
+        var firstHit=new BlockHitResult(Vec3.atCenterOf(first),Direction.UP,first,false);var secondHit=new BlockHitResult(Vec3.atCenterOf(second),Direction.UP,second,false);
+        h.getLevel().getBlockState(first).useWithoutItem(h.getLevel(),owner,firstHit);
+        h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"Empty-hand right-click attunes first trophy");
+        owner.setItemInHand(InteractionHand.MAIN_HAND,new ItemStack(Items.EMERALD));
+        var result=h.getLevel().getBlockState(second).useItemOn(owner.getMainHandItem(),h.getLevel(),owner,InteractionHand.MAIN_HAND,secondHit);
+        h.assertTrue(result.consumesAction(),"Trophy handles right-click while holding an item");
+        h.assertTrue(TrophyEffects.active(owner)==TrophyKind.SKELETON,"Right-clicking another trophy replaces the active selection");
+        h.assertTrue(owner.getData(com.fantasyfeudalism.items.content.ModAttachments.TROPHY)==TrophyKind.SKELETON.ordinal(),"New selection is synchronized to the client");
+        h.assertTrue(owner.getPersistentData().getString("fantasy_feudalism_trophy").equals("SKELETON"),"Persistent selection switches too");
+        var victim=h.spawnWithNoFreeWill(EntityType.COW,3,2,3);
+        var damage=new LivingIncomingDamageEvent(victim,new DamageContainer(h.getLevel().damageSources().playerAttack(owner),10));TrophyEffects.damage(damage);
+        h.assertTrue(Math.abs(damage.getAmount()-10)<.001,"Previous Creeper melee drawback stops immediately");
+        owner.setItemInHand(InteractionHand.OFF_HAND,new ItemStack(Items.STICK));
+        h.getLevel().getBlockState(first).useItemOn(owner.getOffhandItem(),h.getLevel(),owner,InteractionHand.OFF_HAND,firstHit);
+        h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"Offhand right-click can switch back");
+        h.getLevel().getBlockState(second).useItemOn(new ItemStack(Items.EMERALD),h.getLevel(),stranger,InteractionHand.MAIN_HAND,secondHit);
+        h.assertTrue(TrophyLedger.get(h.getLevel()).active(stranger.getUUID())==null,"Another player's trophy cannot be selected");
+        h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"Stranger cannot change owner's selection");
+        h.getLevel().removeBlock(second,false);
+        h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"Destroying an inactive trophy preserves the current attunement");h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void switching_trophies_clears_previous_night_vision(GameTestHelper h){
+        var owner=player(h);var dragon=Trophies.BLOCKS.get(TrophyKind.ENDER_DRAGON).get();var creeper=Trophies.BLOCKS.get(TrophyKind.CREEPER).get();
+        var first=h.absolutePos(new net.minecraft.core.BlockPos(2,2,2));var second=h.absolutePos(new net.minecraft.core.BlockPos(4,2,2));
+        h.getLevel().setBlockAndUpdate(first,dragon.defaultBlockState());dragon.setPlacedBy(h.getLevel(),first,dragon.defaultBlockState(),owner,new ItemStack(dragon));
+        h.getLevel().setBlockAndUpdate(second,creeper.defaultBlockState());creeper.setPlacedBy(h.getLevel(),second,creeper.defaultBlockState(),owner,new ItemStack(creeper));
+        h.getLevel().getBlockState(first).useWithoutItem(h.getLevel(),owner,new BlockHitResult(Vec3.atCenterOf(first),Direction.UP,first,false));
+        owner.tickCount=20;TrophyEffects.tick(new net.neoforged.neoforge.event.tick.PlayerTickEvent.Post(owner));
+        h.assertTrue(owner.hasEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION),"Dragon trophy grants its passive bonus");
+        owner.setItemInHand(InteractionHand.MAIN_HAND,new ItemStack(Items.STICK));
+        h.getLevel().getBlockState(second).useItemOn(owner.getMainHandItem(),h.getLevel(),owner,InteractionHand.MAIN_HAND,new BlockHitResult(Vec3.atCenterOf(second),Direction.UP,second,false));
+        h.assertFalse(owner.hasEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION),"Switching removes the previous trophy's own passive bonus immediately");
+        h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"New trophy is the only active selection");h.succeed();
+    }
+    @GameTest(template="empty")
     public static void trophy_combat_percentages(GameTestHelper h){
         var player=player(h);var victim=h.spawnWithNoFreeWill(EntityType.COW,3,2,3);
         select(player,TrophyKind.STRAY);var hit=new LivingIncomingDamageEvent(victim,new DamageContainer(h.getLevel().damageSources().playerAttack(player),10));TrophyEffects.damage(hit);h.assertTrue(Math.abs(hit.getAmount()-11.5)<.001,"Stray gives fifteen percent damage bonus");h.assertTrue(victim.hasEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN),"Stray applies Slowness");

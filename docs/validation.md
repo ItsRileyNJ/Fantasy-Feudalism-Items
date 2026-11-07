@@ -53,7 +53,7 @@ Sources include either hand of living entities, dropped light items, and mounted
 lanterns. Fuel, toggles, and soul-light brightness use the existing item-state
 logic. Immutable per-section source snapshots are safe for chunk build workers;
 changed and removed sources invalidate both their previous and current areas.
-Updates run every five unpaused client ticks, and world changes clear snapshots.
+Updates run every three unpaused client ticks, and world changes clear snapshots.
 Packed-light merging preserves sky light and brighter existing block light.
 
 Client smoke checks now call the built-in provider and cover distance falloff,
@@ -101,3 +101,28 @@ any effects. Cauldron filling, brewing and creative consumption are unchanged.
 Regression checks cover multiple harmful effects, repeated drinks, strong and
 infinite effects, hidden weaker instances, beneficial/neutral preservation,
 no active effects, stacked bottle returns and fractional food restoration.
+
+### Emissive lights, faster updates and trophy switching
+
+Lit normal/soul torch models and lantern light chambers use NeoForge emissive
+model data for held items and placed blocks. Wall torches and hanging lanterns
+are covered. Unlit models inherit ordinary vanilla geometry without emissive
+data; lantern caps and chains retain normal shading. Torch items keep their
+sprite silhouette using NeoForge's item-layer loader. Dynamic source snapshots
+now refresh every three unpaused ticks (150 ms at 20 TPS), with shader shutdown
+unchanged. Model emission is separate from dynamic illumination of surroundings.
+
+Owned trophies explicitly handle item-bearing interactions in either hand and
+replace the current attunement. Server regression tests verify empty-hand and
+held-item selection, switching back, synchronized and persistent selection,
+old drawback removal, previous Night Vision cleanup, ownership checks and
+preservation of the active selection when an inactive trophy is destroyed.
+
+Validation: full build, shader API checks and **53/53 dedicated-server tests**
+passed. An inheritance-aware resource check passed **36 lit/unlit held/placed
+model checks**, including ordinary shading on lantern caps and chains.
+Graphical launch was attempted but failed at GLFW initialization: no active X11
+display. The selected environment
+`ccarenv_b64_Y2NhcmVudl8zN2NjYmRhNjZjMTA4MTkxOTBmYjMyZTIwMzZhMjA1Yg`
+reports desktop support with state unknown; no desktop JavaScript control tool
+was offered. In-game appearance remains unverified in this workspace.
