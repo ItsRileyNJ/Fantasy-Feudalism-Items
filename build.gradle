@@ -2,11 +2,15 @@ plugins {
     id 'java-library'
     id 'net.neoforged.moddev' version '2.0.148'
 }
-version = '0.1.2'
+version = '0.1.3'
 group = 'com.fantasyfeudalism.items'
 base { archivesName = 'fantasy_feudalism_items' }
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 sourceSets {
+    shaderTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
     gameTest {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
@@ -65,3 +69,12 @@ tasks.named('runGameTestServer') {
         logger.lifecycle("Verified ${executed} Minecraft integration tests from the current run.")
     }
 }
+
+// Verify optional shader API detection without a graphical client or third-party binaries.
+tasks.register('shaderCompatibilityTest', JavaExec) {
+    dependsOn tasks.named('shaderTestClasses')
+    classpath = sourceSets.shaderTest.runtimeClasspath
+    mainClass = 'com.fantasyfeudalism.items.client.ShaderCompatibilityTest'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+}
+tasks.named('check') { dependsOn 'shaderCompatibilityTest' }

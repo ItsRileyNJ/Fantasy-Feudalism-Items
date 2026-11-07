@@ -21,11 +21,11 @@ All new items appear in the Fantasy Feudalism Items creative tab. Ingredient-bas
 
 ## Optional integrations
 
-Tested with the supplied **LambDynamicLights 4.8.11+1.21.1** and **Fantasy Feudalism Mercenaries 1.17.1**. Neither is bundled or required. Compatibility code lives entirely in Items; their JARs are unchanged.
+Optional integration with **Fantasy Feudalism Mercenaries 1.17.1** is implemented entirely in Items; its JAR is unchanged.
 
 Version **0.1.1** fixes a lantern-registration conflict with **Supplementaries Squared 1.21-1.2.18**. Items adds its fuel state only to vanilla lanterns; other mods retain ownership of their lantern states, defaults and behavior. Verified with Supplementaries Squared 1.21-1.2.18, Supplementaries 1.21.1-4.0.2 and Moonlight 1.21.1-3.7.2: 49 server tests and 10 client smoke checks passed.
 
-LambDynamicLights handles held, dropped and mounted light emission, respecting fuel and on/off state. Without it, placed lighting continues normally and mounted lights emit no light.
+Built-in client lighting illuminates terrain and entities around held, dropped and mounted torches and lanterns, respecting fuel and on/off state. No dynamic-light mod is required. Both hands and other living entities are supported; inventory-only lights do not emit. Brightness falls off with distance, with source updates every five client ticks. Light is visual only, travels through walls, and does not affect mob spawning. Built-in dynamic lights automatically turn off while an Iris/Oculus or OptiFine shader pack is active, including when toggled in-game or while paused. This clears cached sources and rebuilds affected terrain; turning shaders off restores dynamic lighting. If an installed shader API fails, lighting stays disabled. Alternative terrain renderers still require separate compatibility testing.
 
 With Mercenaries, its caravan stock offers one saddlebag for 14 emeralds and four matching Spawner Eyes for 20 emeralds. Village blacksmith/leatherworker chests have a 20% saddlebag chance. **Without Mercenaries, saddlebags and Spawner Eyes are obtained only through crafting.** A saddlebag half uses eight leather around an iron block; combine half/leather/half across a row.
 

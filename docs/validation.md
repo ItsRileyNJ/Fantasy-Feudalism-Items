@@ -45,3 +45,46 @@ The graphical client was exercised with lantern search results in the creative m
 Ten ZIPs supplied 195 top-level mod JARs, with no missing declared required dependencies. The pack contained Items **0.1.1**; the isolated run replaced that copy with **0.1.2**. Galosphere 1.5.5 was intentionally omitted. The complete available set entered the fixture world and passed all **14 client smoke checks**. Complementary Unbound r5.9.3 was then enabled through Iris, compiled and rendered; vanilla-lantern holding and creative-menu lantern search/hover were exercised. Diagnostic JFR files and a detailed report are saved with the artifacts.
 
 This test used generated configs and the fixture world because user configs/options/saves were not supplied. The user reports 8 GB allocation and launching through CurseForge/vanilla; the test heap was approximately 8 GB. Software rendering limits FPS comparison. The reported severe lag has not been confirmed resolved; update the uploaded 0.1.1 to 0.1.2 and compare shader-on versus shader-off behavior on the user's hardware. No further production change resulted from this run.
+
+## 0.1.3 built-in dynamic lighting
+
+Replaces the LambDynamicLights adapters with a client-only vanilla-renderer hook.
+Sources include either hand of living entities, dropped light items, and mounted
+lanterns. Fuel, toggles, and soul-light brightness use the existing item-state
+logic. Immutable per-section source snapshots are safe for chunk build workers;
+changed and removed sources invalidate both their previous and current areas.
+Updates run every five unpaused client ticks, and world changes clear snapshots.
+Packed-light merging preserves sky light and brighter existing block light.
+
+Client smoke checks now call the built-in provider and cover distance falloff,
+range limits, packed-light preservation, dropped items, both hands, mounted
+lanterns, fuel exhaustion, and switching off. Historical third-party-renderer and
+shader results above apply to earlier versions; they do not validate this new
+rendering hook. Built-in light travels through walls and is visual only.
+
+Validation for this change: Java 21 compilation (including client smoke sources)
+and the full `build` lifecycle passed with **49/49 dedicated-server tests**, with
+no optional mods installed. The updated graphical client smoke suite has not
+been executed in this workspace; terrain illumination, movement/removal visuals,
+and shader/alternative renderer compatibility remain unverified in-game.
+
+### Shader guard
+
+The render-frame and client-tick handlers query Iris (including the legacy
+Oculus API) and OptiFine shader state. While a shader pack is active, the
+packed-light hook returns vanilla lighting immediately, source collection stops,
+and all cached sources are discarded. Sections previously affected by built-in
+lighting are scheduled for rebuilding. Detection runs before pause/tick
+throttling, so shader toggles while paused also clear illumination. Disabling
+shaders allows fresh source collection to resume. Missing shader providers leave
+lighting available; a detected provider with a broken or incompatible API fails
+closed and keeps built-in lighting disabled.
+
+`shaderCompatibilityTest` exercises isolated current/legacy Iris and OptiFine
+API fixtures, toggling packs on and off, absent providers, broken calls, missing
+methods and an installed Iris with no expected API. This is included in `check`;
+fixtures are excluded from the release JAR. Actual shader-pack rendering and
+terrain rebuilds have not been checked in a graphical client in this workspace.
+
+Shader-guard validation: the full build passed, including all shader detection
+fixture checks and all 49 dedicated-server integration tests.

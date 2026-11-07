@@ -9,7 +9,8 @@
     "HorseBodyAccessor",
     "TrophyNameMixin",
     "TrophyNameDistanceMixin",
-    "LightHandMixin"
+    "LightHandMixin",
+    "DynamicLightMixin"
   ],
   "injectors": {
     "defaultRequire": 1

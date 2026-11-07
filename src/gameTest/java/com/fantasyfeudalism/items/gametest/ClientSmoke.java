@@ -25,11 +25,10 @@ public final class ClientSmoke {
     private static int phase,ticks;
     private static volatile UUID horseId,donkeyId;
     private static final List<String> PASSED=new ArrayList<>();
-    private static Object itemManager,entityManager;
     private static void check(boolean condition,String message){if(!condition)throw new AssertionError(message);PASSED.add(message);}
     private static Entity entity(Minecraft client,UUID id){for(var entity:client.level.entitiesForRendering())if(entity.getUUID().equals(id))return entity;return null;}
-    private static int itemLight(ItemStack stack)throws Exception{return (int)Class.forName("dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager").getMethod("getLuminance",ItemStack.class,boolean.class).invoke(itemManager,stack,false);}
-    private static int entityLight(Entity entity)throws Exception{return (int)Class.forName("dev.lambdaurora.lambdynlights.api.entity.EntityLightSourceManager").getMethod("getLuminance",Entity.class).invoke(entityManager,entity);}
+    private static int itemLight(ItemStack stack){return com.fantasyfeudalism.items.client.DynamicLighting.itemLight(stack);}
+    private static int entityLight(Entity entity){return com.fantasyfeudalism.items.client.DynamicLighting.entityLight(entity);}
     private static void report(boolean complete,Throwable error){
         try{var json=new com.google.gson.JsonObject();json.addProperty("complete",complete);json.add("passed",new com.google.gson.Gson().toJsonTree(PASSED));if(error!=null)json.addProperty("error",error.toString());var path=Path.of(System.getProperty("fantasyfeudalism.smokeReport"));Files.createDirectories(path.getParent());Files.writeString(path,new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(json));}catch(Exception exception){exception.printStackTrace();}
     }
@@ -39,8 +38,20 @@ public final class ClientSmoke {
         try{
             if(++ticks>1200)throw new AssertionError("Client smoke phase timed out: "+phase);
             if(phase==0){
-                var type=Class.forName("dev.lambdaurora.lambdynlights.LambDynLights");var lights=type.getMethod("get").invoke(null);
-                itemManager=type.getMethod("itemLightSourceManager").invoke(lights);entityManager=type.getMethod("entityLightSourceManager").invoke(lights);
+                var source=new com.fantasyfeudalism.items.client.DynamicLighting.Source(0,0,0,15);
+                var lights=List.of(source);
+                check(com.fantasyfeudalism.items.client.DynamicLighting.lightAt(lights,0,0,0,0)==240,"Dynamic source emits full brightness at its origin");
+                check(com.fantasyfeudalism.items.client.DynamicLighting.lightAt(lights,5,0,0,0)==160,"Dynamic brightness falls off with distance");
+                check(com.fantasyfeudalism.items.client.DynamicLighting.lightAt(lights,15,0,0,0)==0,"Dynamic brightness ends at the source radius");
+                check(com.fantasyfeudalism.items.client.DynamicLighting.lightAt(lights,5,0,0,0xF000E0)==0xF000E0,"Dynamic illumination preserves brighter block light and sky light");
+                check(com.fantasyfeudalism.items.client.DynamicLighting.lightAt(List.of(),0,0,0,0)==0,"Removed sources leave no dynamic illumination");
+                var drop=new net.minecraft.world.entity.item.ItemEntity(client.level,0,0,0,new ItemStack(Items.TORCH));
+                check(entityLight(drop)==14,"Dropped torches emit light without optional mods");
+                var holder=EntityType.HORSE.create(client.level);
+                holder.setItemSlot(EquipmentSlot.OFFHAND,new ItemStack(Items.SOUL_TORCH));
+                check(entityLight(holder)==10,"Offhand soul lights emit their vanilla brightness");
+                holder.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.LANTERN));
+                check(entityLight(holder)==15,"Multiple held lights use the brightest source");
                 var before=new ItemStack(Items.LANTERN);var after=before.copy();LightItemFuel.set(after,80,true);
                 net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,before,0);
                 check(!net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,after,0),"Fuel countdown does not replay main-hand equip animation");
@@ -48,8 +59,8 @@ public final class ClientSmoke {
                 check(net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,after,1),"Changing hotbar slot still equips the lantern");
                 after.set(DataComponents.CUSTOM_NAME,Component.literal("Different lantern"));
                 check(net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,after,1),"Unrelated item component changes retain equip behavior");
-                check(itemLight(new ItemStack(Items.TORCH))==14,"LambDynamicLights uses vanilla torch brightness");
-                check(itemLight(new ItemStack(Items.LANTERN))==15,"LambDynamicLights uses vanilla lantern brightness");
+                check(itemLight(new ItemStack(Items.TORCH))==14,"Built-in lighting uses vanilla torch brightness");
+                check(itemLight(new ItemStack(Items.LANTERN))==15,"Built-in lighting uses vanilla lantern brightness");
                 var off=new ItemStack(Items.LANTERN);LightItemFuel.set(off,100,false);check(itemLight(off)==0,"Switched-off lantern produces no dynamic light");
                 var empty=new ItemStack(Items.TORCH);LightItemFuel.set(empty,0,false);check(itemLight(empty)==0,"Burned-out torch produces no dynamic light");
                 check(itemLight(new ItemStack(Items.SOUL_LANTERN))==10,"Soul lantern retains vanilla brightness");
@@ -64,7 +75,7 @@ public final class ClientSmoke {
             if(horse==null)return;
             if(phase==1){
                 var data=horse.getData(ModAttachments.MOUNT);if(!data.contains("Slot3"))return;
-                check(entityLight(horse)==15,"Mounted lantern contributes light through LambDynamicLights");
+                check(entityLight(horse)==15,"Mounted lantern contributes light through built-in lighting");
                 var donkey=donkeyId==null?null:entity(client,donkeyId);if(donkey==null||!donkey.getData(ModAttachments.MOUNT).contains("Slot4"))return;
                 var bag=ItemStack.parse(client.level.registryAccess(),donkey.getData(ModAttachments.MOUNT).getCompound("Slot4")).orElseThrow();check(bag.has(DataComponents.DYED_COLOR),"Equipped saddlebag dye is synchronized to rendering client");
                 client.getSingleplayerServer().execute(()->{var player=client.getSingleplayerServer().getPlayerList().getPlayer(client.player.getUUID());var mount=(AbstractHorse)player.serverLevel().getEntity(horseId);var lantern=MountEquipment.item(mount,3);LightItemFuel.set(lantern,100,false);MountEquipment.set(mount,3,lantern);});phase=2;ticks=0;return;
