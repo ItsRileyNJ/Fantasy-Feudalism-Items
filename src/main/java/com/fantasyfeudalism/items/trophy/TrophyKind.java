@@ -23,6 +23,6 @@ public enum TrophyKind {
         lines.add(Component.empty());
         lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy.attune").withStyle(ChatFormatting.DARK_GRAY));
         lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy.limit").withStyle(ChatFormatting.GOLD));
-        lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy.permanent").withStyle(ChatFormatting.GOLD));
+        lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy.replacement").withStyle(ChatFormatting.GOLD));
     }
 }

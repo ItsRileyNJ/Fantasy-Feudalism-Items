@@ -118,7 +118,7 @@ import re
 source=(ROOT.parents[2]/'src/main/java/com/fantasyfeudalism/items/trophy/TrophyKind.java').read_text()
 lang=json.loads((ROOT/f'assets/{MOD}/lang/en_us.json').read_text())
 base='tooltip.'+MOD+'.trophy.'
-lang.update({base+'bonus':'While attuned:',base+'drawback':'Drawback:',base+'attune':'Right-click a trophy you own to change your attunement.',base+'limit':'Only one trophy can be active. You may place each type only once, ever.',base+'permanent':'Placement is permanent. Breaking your active trophy ends attunement.'})
+lang.update({base+'bonus':'While attuned:',base+'drawback':'Drawback:',base+'attune':'Right-click a trophy you own to change your attunement.',base+'limit':'You can place one trophy of each type and attune to one at a time.',base+'replacement':'Breaking a trophy frees its slot. Broken trophies drop nothing.'})
 for kind,benefits,drawbacks in re.findall(r'([A-Z_]+)\(new String\[\]\{([^}]+)\},new String\[\]\{([^}]+)\}\)',source):
  for category,values in [('benefit',benefits),('drawback',drawbacks)]:
   for index,line in enumerate(re.findall(r'"([^"\n]+)"',values)):lang[base+kind.lower()+'.'+category+'.'+str(index)]=line

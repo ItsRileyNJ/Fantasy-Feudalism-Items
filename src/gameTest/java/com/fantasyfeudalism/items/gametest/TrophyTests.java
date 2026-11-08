@@ -53,8 +53,11 @@ public final class TrophyTests {
         var hit=new BlockHitResult(Vec3.atCenterOf(pos),Direction.UP,pos,false);
         h.getLevel().getBlockState(pos).useWithoutItem(h.getLevel(),outsider,hit);h.assertTrue(TrophyLedger.get(h.getLevel()).active(outsider.getUUID())==null,"Non-owner cannot attune");
         h.getLevel().getBlockState(pos).useWithoutItem(h.getLevel(),owner,hit);h.assertTrue(TrophyLedger.get(h.getLevel()).active(owner.getUUID())==TrophyKind.CREEPER,"Owner can attune");
-        h.getLevel().removeBlock(pos,false);h.assertTrue(TrophyLedger.get(h.getLevel()).active(owner.getUUID())==null,"Destroying trophy ends attunement");h.assertTrue(TrophyLedger.get(h.getLevel()).hasPlaced(owner.getUUID(),TrophyKind.CREEPER),"Destruction does not erase permanent placement history");
-        var context=new BlockPlaceContext(owner,InteractionHand.MAIN_HAND,new ItemStack(block),hit);h.assertTrue(((BlockItem)block.asItem()).place(context)==InteractionResult.FAIL,"Same owner cannot place another of destroyed trophy type");h.succeed();
+        h.getLevel().removeBlock(pos,false);h.assertTrue(TrophyLedger.get(h.getLevel()).active(owner.getUUID())==null,"Destroying trophy ends attunement");h.assertFalse(TrophyLedger.get(h.getLevel()).hasPlaced(owner.getUUID(),TrophyKind.CREEPER),"Destruction releases the owner's placement slot");
+        var floor=pos.below();h.getLevel().setBlockAndUpdate(floor,net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        var context=new BlockPlaceContext(owner,InteractionHand.MAIN_HAND,new ItemStack(block),new BlockHitResult(Vec3.atCenterOf(floor),Direction.UP,floor,false));
+        h.assertTrue(((BlockItem)block.asItem()).place(context).consumesAction(),"Owner can place a new trophy of the same type after destruction");
+        h.assertTrue(TrophyLedger.get(h.getLevel()).hasPlaced(owner.getUUID(),TrophyKind.CREEPER),"Replacement reserves its type again");h.succeed();
     }
     @GameTest(template="empty")
     public static void right_clicking_another_owned_trophy_replaces_attunement(GameTestHelper h){
@@ -168,6 +171,40 @@ public final class TrophyTests {
         }
         h.succeed();
     }
+    private static InteractionResult placeTrophy(GameTestHelper h,Player player,TrophyKind kind,BlockPos pos){
+        var floor=pos.below();h.getLevel().setBlockAndUpdate(floor,net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        var stack=new ItemStack(Trophies.BLOCKS.get(kind).get());
+        return ((BlockItem)stack.getItem()).place(new BlockPlaceContext(player,InteractionHand.MAIN_HAND,stack,new BlockHitResult(Vec3.atCenterOf(floor),Direction.UP,floor,false)));
+    }
+    @GameTest(template="empty")
+    public static void trophy_placement_limit_is_per_owner_and_type_and_resets_on_break(GameTestHelper h){
+        var owner=player(h);var other=player(h);var first=h.absolutePos(new BlockPos(2,2,2));var second=h.absolutePos(new BlockPos(4,2,2));var third=h.absolutePos(new BlockPos(6,2,2));var replacement=h.absolutePos(new BlockPos(2,2,4));
+        h.assertTrue(placeTrophy(h,owner,TrophyKind.CREEPER,first).consumesAction(),"First owned trophy can be placed");
+        h.assertTrue(placeTrophy(h,owner,TrophyKind.CREEPER,replacement)==InteractionResult.FAIL,"A second standing trophy of the same type is rejected");
+        h.assertTrue(placeTrophy(h,owner,TrophyKind.SKELETON,second).consumesAction(),"The owner may place a different trophy type");
+        h.assertTrue(placeTrophy(h,other,TrophyKind.CREEPER,third).consumesAction(),"Another player has an independent placement slot");
+        TrophyLedger.get(h.getLevel()).attune(owner.getUUID(),TrophyKind.SKELETON);
+        h.getLevel().destroyBlock(first,true,other);
+        var ledger=TrophyLedger.get(h.getLevel());
+        h.assertFalse(ledger.hasPlaced(owner.getUUID(),TrophyKind.CREEPER),"Breaking someone else's trophy releases its owner's slot");
+        h.assertTrue(ledger.hasPlaced(other.getUUID(),TrophyKind.CREEPER)&&ledger.hasPlaced(owner.getUUID(),TrophyKind.SKELETON),"Other owners and types keep their standing reservations");
+        h.assertTrue(ledger.active(owner.getUUID())==TrophyKind.SKELETON,"Destroying an inactive type does not clear the selected trophy");
+        h.assertTrue(placeTrophy(h,owner,TrophyKind.CREEPER,replacement).consumesAction(),"A replacement may be placed at a new position");
+        h.assertTrue(placeTrophy(h,owner,TrophyKind.CREEPER,first)==InteractionResult.FAIL,"The replacement re-establishes the one-at-a-time limit");h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void trophy_placement_reservations_save_and_release_independently(GameTestHelper h){
+        var ledger=new TrophyLedger();var owner=UUID.randomUUID();
+        ledger.recordPlacement(owner,TrophyKind.CREEPER);ledger.recordPlacement(owner,TrophyKind.SKELETON);ledger.attune(owner,TrophyKind.SKELETON);
+        ledger=TrophyLedger.load(ledger.save(new net.minecraft.nbt.CompoundTag(),h.getLevel().registryAccess()),h.getLevel().registryAccess());
+        h.assertTrue(ledger.hasPlaced(owner,TrophyKind.CREEPER)&&ledger.hasPlaced(owner,TrophyKind.SKELETON),"Saving preserves slots for standing trophies");
+        h.assertTrue(ledger.releasePlacement(owner,TrophyKind.CREEPER),"Removal releases exactly the specified type");
+        ledger=TrophyLedger.load(ledger.save(new net.minecraft.nbt.CompoundTag(),h.getLevel().registryAccess()),h.getLevel().registryAccess());
+        h.assertFalse(ledger.hasPlaced(owner,TrophyKind.CREEPER),"Released slots remain free after reload");
+        h.assertTrue(ledger.hasPlaced(owner,TrophyKind.SKELETON)&&ledger.active(owner)==TrophyKind.SKELETON,"Another type and its attunement survive reload");
+        h.assertTrue(ledger.recordPlacement(owner,TrophyKind.CREEPER),"Released type can be reserved again");
+        h.assertFalse(ledger.recordPlacement(owner,TrophyKind.CREEPER),"A standing type cannot reserve another slot");h.succeed();
+    }
     @GameTest(template="empty")
     public static void trophy_combat_percentages(GameTestHelper h){
         var player=player(h);var victim=h.spawnWithNoFreeWill(EntityType.COW,3,2,3);
@@ -239,7 +276,7 @@ public final class TrophyTests {
     @GameTest(template="empty")
     public static void trophy_death_clears_bonus_but_preserves_placement(GameTestHelper h){
         var player=player(h);select(player,TrophyKind.ZOMBIE);TrophyEffects.changed(player);TrophyEffects.clone(new net.neoforged.neoforge.event.entity.player.PlayerEvent.Clone(player,player,true));
-        h.assertTrue(TrophyEffects.active(player)==null,"Death clears active trophy");h.assertTrue(TrophyAttunement.EFFECTS.values().stream().noneMatch(player::hasEffect),"Death clears trophy status indicators");h.assertTrue(TrophyLedger.get(h.getLevel()).hasPlaced(player.getUUID(),TrophyKind.ZOMBIE),"Death preserves permanent placement restriction");h.succeed();
+        h.assertTrue(TrophyEffects.active(player)==null,"Death clears active trophy");h.assertTrue(TrophyAttunement.EFFECTS.values().stream().noneMatch(player::hasEffect),"Death clears trophy status indicators");h.assertTrue(TrophyLedger.get(h.getLevel()).hasPlaced(player.getUUID(),TrophyKind.ZOMBIE),"Death preserves the slot for the trophy still standing");h.succeed();
     }
 
     @GameTest(template="empty")

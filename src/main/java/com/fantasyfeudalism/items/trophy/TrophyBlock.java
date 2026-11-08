@@ -53,6 +53,7 @@ public final class TrophyBlock extends BaseEntityBlock {
     @Override protected void onRemove(BlockState state,Level level,BlockPos pos,BlockState next,boolean moving){
         if(!state.is(next.getBlock())&&level instanceof net.minecraft.server.level.ServerLevel server&&level.getBlockEntity(pos) instanceof TrophyEntity trophy&&trophy.owner!=null){
             var ledger=TrophyLedger.get(server);
+            ledger.releasePlacement(trophy.owner,kind);
             if(ledger.active(trophy.owner)==kind){ledger.clear(trophy.owner);var owner=server.getServer().getPlayerList().getPlayer(trophy.owner);if(owner!=null){TrophyEffects.changed(owner);owner.setData(com.fantasyfeudalism.items.content.ModAttachments.TROPHY,-1);owner.getPersistentData().remove("fantasy_feudalism_trophy");}}
         }
         super.onRemove(state,level,pos,next,moving);
@@ -66,7 +67,7 @@ public final class TrophyBlock extends BaseEntityBlock {
         @Override public InteractionResult place(net.minecraft.world.item.context.BlockPlaceContext context) {
             if (!context.getLevel().isClientSide && context.getPlayer() != null
                 && TrophyLedger.get((net.minecraft.server.level.ServerLevel) context.getLevel()).hasPlaced(context.getPlayer().getUUID(), kind)) {
-                context.getPlayer().displayClientMessage(net.minecraft.network.chat.Component.literal("You have already permanently placed this trophy type."), true);
+                context.getPlayer().displayClientMessage(net.minecraft.network.chat.Component.translatable("message.fantasy_feudalism_items.trophy_limit"), true);
                 return InteractionResult.FAIL;
             }
             return super.place(context);

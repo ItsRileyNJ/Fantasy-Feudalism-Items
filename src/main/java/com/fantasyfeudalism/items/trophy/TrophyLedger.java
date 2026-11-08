@@ -6,7 +6,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 
-/** Permanent placement history survives player death, trophy destruction and chunk unloading. */
+/** Reservations for currently placed trophies survive death, saving and chunk unloading. */
 public final class TrophyLedger extends SavedData {
     private final Map<UUID, EnumSet<TrophyKind>> placed = new HashMap<>();
     private final Map<UUID, TrophyKind> active = new HashMap<>();
@@ -14,6 +14,13 @@ public final class TrophyLedger extends SavedData {
     public boolean hasPlaced(UUID owner, TrophyKind kind) { return placed.getOrDefault(owner, EnumSet.noneOf(TrophyKind.class)).contains(kind); }
     public boolean recordPlacement(UUID owner, TrophyKind kind) {
         boolean added = placed.computeIfAbsent(owner, ignored -> EnumSet.noneOf(TrophyKind.class)).add(kind); if (added) setDirty(); return added;
+    }
+    public boolean releasePlacement(UUID owner, TrophyKind kind) {
+        var kinds = placed.get(owner);
+        if (kinds == null || !kinds.remove(kind)) return false;
+        if (kinds.isEmpty()) placed.remove(owner);
+        setDirty();
+        return true;
     }
     public TrophyKind active(UUID owner) { return active.get(owner); }
     public void attune(UUID owner, TrophyKind kind) { active.put(owner, kind); setDirty(); }

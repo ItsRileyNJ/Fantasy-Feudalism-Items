@@ -44,8 +44,7 @@
   "tooltip.fantasy_feudalism_items.trophy.bonus": "While attuned:",
   "tooltip.fantasy_feudalism_items.trophy.drawback": "Drawback:",
   "tooltip.fantasy_feudalism_items.trophy.attune": "Right-click a trophy you own to change your attunement.",
-  "tooltip.fantasy_feudalism_items.trophy.limit": "Only one trophy can be active. You may place each type only once, ever.",
-  "tooltip.fantasy_feudalism_items.trophy.permanent": "Placement is permanent. Breaking your active trophy ends attunement.",
+  "tooltip.fantasy_feudalism_items.trophy.limit": "You can place one trophy of each type and attune to one at a time.",
   "tooltip.fantasy_feudalism_items.trophy.zombie.benefit.0": "Gain Resistance I.",
   "tooltip.fantasy_feudalism_items.trophy.zombie.drawback.0": "Hunger depletes 25% faster.",
   "tooltip.fantasy_feudalism_items.trophy.skeleton.benefit.0": "Deal 15% more ranged damage.",
@@ -83,5 +82,7 @@
   "effect.fantasy_feudalism_items.attuned_bogged": "Bogged Trophy",
   "effect.fantasy_feudalism_items.attuned_piglin": "Piglin Trophy",
   "effect.fantasy_feudalism_items.attuned_ender_dragon": "Ender Dragon Trophy",
-  "effect.fantasy_feudalism_items.attuned_player": "Player Trophy"
+  "effect.fantasy_feudalism_items.attuned_player": "Player Trophy",
+  "tooltip.fantasy_feudalism_items.trophy.replacement": "Breaking a trophy frees its slot. Broken trophies drop nothing.",
+  "message.fantasy_feudalism_items.trophy_limit": "You already have a placed trophy of this type. Break it before placing another."
 }

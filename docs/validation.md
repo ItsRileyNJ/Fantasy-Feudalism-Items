@@ -249,3 +249,27 @@ cutout rendering, exact preservation of the four supplied base cubes, removal of
 placeholder references and stable full regeneration. The composed Bogged face
 was visually inspected and contains its missing facial detail. Full in-game 3D
 rendering remains unverified under the existing display limitation.
+
+### One standing trophy per owner and type
+
+The placement ledger now releases a type's reservation when its trophy block is
+removed. A player can place a newly crafted trophy of that type afterward, but
+cannot place another while the replacement is standing. Removal frees the
+original owner's slot even if someone else breaks the trophy. Other trophy types
+and owners keep their own slots. Destroying the active trophy still clears its
+attunement/status indicator; destroying an inactive trophy preserves the current
+selection. Broken trophies still drop nothing.
+
+Death, logout and chunk unloading do not release slots for standing trophies.
+The saved-data format is retained, so existing placed trophies remain counted
+and release their slots when broken under this update. This change does not
+blindly reset legacy flags, which also protect standing trophies in unloaded
+chunks; historical flags for trophies destroyed before this update are not
+automatically distinguishable from those standing trophies.
+
+Current tooltips, placement-denial messages, controls and rules now describe the
+one-at-a-time limit instead of lifetime placement. The resource generator keeps
+the replacement wording. Validation: full build, shader checks and **60/60 server
+tests** passed, including duplicate rejection, replacement at a new position,
+another player breaking the trophy, independent owners/types, inactive trophy
+attunement, and persistence of occupied and freed slots across save/reload.
