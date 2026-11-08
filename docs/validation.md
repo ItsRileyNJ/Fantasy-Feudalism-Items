@@ -323,3 +323,24 @@ vanilla sprite references, retained layered head geometry and regeneration. The
 expanded-tooltip invocation target was checked against patched Minecraft
 bytecode. Full in-game GUI/particle presentation remains unverified due to the
 previously documented lack of an active graphical display.
+
+### Full Piglin skull and Enderman trophy head
+
+The Piglin trophy now reproduces the vanilla PiglinHeadModel/PiglinModel head:
+10x8x8 head, 4x4x1 snout, both 1x2x1 tusks, and both 1x5x4 ears. Each part uses
+its native piglin texture region. NeoForge composite child transforms retain the
+real +/-30-degree ear angles instead of approximating them with vanilla element
+rotation increments. The three supplied wooden stand pieces are unchanged.
+
+The Ender Dragon trophy's appearance now uses the 8x8 Enderman head layout and
+vanilla Enderman texture. Its separate purple eye texture is added as a cutout,
+emissive layer. Existing trophy IDs, names, ingredients, effects and placement
+orientation are unchanged. The updated inventory and attunement icons inherit
+the same models. Both changes are retained by the model/content exporter.
+
+Validation: full build, shader checks and **64/64 server tests** passed. Asset
+checks verify piglin part bounds, source UVs, ear pivots/angles, unchanged stand,
+Enderman face UVs, emissive eye data, vanilla texture paths/dimensions and stable
+full regeneration. The NeoForge composite loader and root-transform structure
+were checked against its implementation. Full in-game appearance remains
+unverified due to the existing graphical-display limitation.

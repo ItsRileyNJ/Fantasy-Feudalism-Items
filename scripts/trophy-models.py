@@ -5,8 +5,8 @@ import json
 from copy import deepcopy
 
 MOD = 'fantasy_feudalism_items'
-# Texture, sheet dimensions, head box dimensions, texture origin. Piglin and
-# dragon skulls use their own box layouts rather than humanoid 8x8 UVs.
+# Texture, sheet dimensions, head box dimensions, texture origin. Piglin uses
+# its native wider head plus the full snout, tusks and ears exported below.
 HEADS = {
     'zombie': ('zombie/zombie', 64, 64, 8, 8, 8, 0, 0),
     'skeleton': ('skeleton/skeleton', 64, 32, 8, 8, 8, 0, 0),
@@ -15,7 +15,7 @@ HEADS = {
     'stray': ('skeleton/stray', 64, 32, 8, 8, 8, 0, 0),
     'bogged': ('skeleton/bogged', 64, 32, 8, 8, 8, 0, 0),
     'piglin': ('piglin/piglin', 64, 64, 10, 8, 8, 0, 0),
-    'ender_dragon': ('enderdragon/dragon', 256, 256, 16, 16, 16, 112, 30),
+    'ender_dragon': ('enderman/enderman', 64, 32, 8, 8, 8, 0, 0),
     'player': ('player/wide/steve', 64, 64, 8, 8, 8, 0, 0),
 }
 
@@ -34,6 +34,33 @@ def head_uvs(spec):
     }
     return {side: [n * 16 / (sheet_w if i % 2 == 0 else sheet_h) for i, n in enumerate(uv)]
             for side, uv in pixels.items()}
+
+def piglin_part(bounds, dimensions, texture_origin):
+    spec = ('piglin/piglin', 64, 64, *dimensions, *texture_origin)
+    return {'from': bounds[0], 'to': bounds[1],
+            'faces': {side: {'uv': uv, 'texture': '#head'} for side, uv in head_uvs(spec).items()}}
+
+def piglin_model(stand, textures):
+    # PiglinModel.addHead / PiglinHeadModel: native dimensions and texture regions.
+    # Entity x/y axes are inverted to convert its skull coordinates to block space.
+    parts = [
+        piglin_part(([3, 6, 4], [13, 14, 12]), (10, 8, 8), (0, 0)),
+        piglin_part(([6, 6, 3], [10, 10, 4]), (4, 4, 1), (31, 1)),
+        piglin_part(([5, 6, 3], [6, 8, 4]), (1, 2, 1), (2, 4)),
+        piglin_part(([10, 6, 3], [11, 8, 4]), (1, 2, 1), (2, 0)),
+    ]
+    children = {'stand_and_head': {'textures': textures, 'render_type': 'minecraft:cutout', 'elements': stand + parts}}
+    for name, bounds, uv, pivot, angle in [
+        ('left_ear', ([2.5, 7, 6], [3.5, 12, 10]), (51, 6), [3.5, 12, 8], -30),
+        ('right_ear', ([12.5, 7, 6], [13.5, 12, 10]), (39, 6), [12.5, 12, 8], 30),
+    ]:
+        # NeoForge root transforms allow the real 30-degree ear angles, unlike
+        # vanilla element rotations which only allow multiples of 22.5 degrees.
+        children[name] = {'textures': textures, 'render_type': 'minecraft:cutout',
+                          'transform': {'origin': [n / 16 for n in pivot], 'rotation': {'z': angle}},
+                          'elements': [piglin_part(bounds, (1, 5, 4), uv)]}
+    return {'parent': 'minecraft:block/block', 'loader': 'neoforge:composite',
+            'render_type': 'minecraft:cutout', 'textures': textures, 'children': children}
 
 def generate(root):
     root = Path(root)
@@ -90,12 +117,22 @@ def generate(root):
                 },
                 'elements': [item_head, overlay_cube(item_head, HEAD_OVERLAYS[kind])],
             })
-        write(f'assets/{MOD}/models/block/{kind}_trophy.json', {
+        if kind == 'ender_dragon':
+            eye_sprite = f'{MOD}:trophy_heads/ender_dragon_eyes'
+            sources.append({'type': 'minecraft:single', 'resource': 'minecraft:entity/enderman/enderman_eyes', 'sprite': eye_sprite})
+            textures['head_overlay'] = eye_sprite
+            eyes = overlay_cube(elements[cubes.index(head)], 0.01)
+            eyes['shade'] = False
+            eyes['neoforge_data'] = {'block_light': 15, 'sky_light': 15, 'ambient_occlusion': False}
+            elements.append(eyes)
+        result = {
             'parent': 'minecraft:block/block', 'ambientocclusion': source.get('ambientocclusion', True),
-            **({'render_type': 'minecraft:cutout'} if kind in HEAD_OVERLAYS else {}),
-            'textures': textures,
-            'elements': elements,
-        })
+            **({'render_type': 'minecraft:cutout'} if kind in HEAD_OVERLAYS or kind == 'ender_dragon' else {}),
+            'textures': textures, 'elements': elements,
+        }
+        if kind == 'piglin':
+            result = piglin_model([elements[i] for i, cube in enumerate(cubes) if cube is not head], textures)
+        write(f'assets/{MOD}/models/block/{kind}_trophy.json', result)
         write(f'assets/{MOD}/blockstates/{kind}_trophy.json', {
             'variants': {f'facing={direction}': {'model': f'{MOD}:block/{kind}_trophy', **({'y': angle} if angle else {})}
                          for direction, angle in [('north', 0), ('east', 90), ('south', 180), ('west', 270)]}

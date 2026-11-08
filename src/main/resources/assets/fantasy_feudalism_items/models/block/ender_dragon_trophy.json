@@ -1,11 +1,13 @@
 {
   "parent": "minecraft:block/block",
   "ambientocclusion": true,
+  "render_type": "minecraft:cutout",
   "textures": {
     "wood": "minecraft:block/stripped_spruce_log",
     "wood_top": "minecraft:block/stripped_spruce_log_top",
     "head": "fantasy_feudalism_items:trophy_heads/ender_dragon",
-    "particle": "minecraft:block/stripped_spruce_log"
+    "particle": "minecraft:block/stripped_spruce_log",
+    "head_overlay": "fantasy_feudalism_items:trophy_heads/ender_dragon_eyes"
   },
   "elements": [
     {
@@ -230,58 +232,132 @@
       "faces": {
         "north": {
           "uv": [
-            8.0,
-            2.875,
-            9.0,
-            3.875
+            2.0,
+            4.0,
+            4.0,
+            8.0
           ],
           "texture": "#head"
         },
         "east": {
           "uv": [
-            7.0,
-            2.875,
-            8.0,
-            3.875
+            0.0,
+            4.0,
+            2.0,
+            8.0
           ],
           "texture": "#head"
         },
         "south": {
           "uv": [
-            10.0,
-            2.875,
-            11.0,
-            3.875
+            6.0,
+            4.0,
+            8.0,
+            8.0
           ],
           "texture": "#head"
         },
         "west": {
           "uv": [
-            9.0,
-            2.875,
-            10.0,
-            3.875
+            4.0,
+            4.0,
+            6.0,
+            8.0
           ],
           "texture": "#head"
         },
         "up": {
           "uv": [
-            8.0,
-            1.875,
-            9.0,
-            2.875
+            2.0,
+            0.0,
+            4.0,
+            4.0
           ],
           "texture": "#head"
         },
         "down": {
           "uv": [
-            9.0,
-            2.875,
-            10.0,
-            1.875
+            4.0,
+            4.0,
+            6.0,
+            0.0
           ],
           "texture": "#head"
         }
+      }
+    },
+    {
+      "from": [
+        3.99,
+        5.99,
+        3.99
+      ],
+      "to": [
+        12.01,
+        14.01,
+        12.01
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            2.0,
+            4.0,
+            4.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            4.0,
+            2.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "south": {
+          "uv": [
+            6.0,
+            4.0,
+            8.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "west": {
+          "uv": [
+            4.0,
+            4.0,
+            6.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "up": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            4.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "down": {
+          "uv": [
+            4.0,
+            4.0,
+            6.0,
+            0.0
+          ],
+          "texture": "#head_overlay"
+        }
+      },
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15,
+        "ambient_occlusion": false
       }
     }
   ]

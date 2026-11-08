@@ -47,8 +47,13 @@
     },
     {
       "type": "minecraft:single",
-      "resource": "minecraft:entity/enderdragon/dragon",
+      "resource": "minecraft:entity/enderman/enderman",
       "sprite": "fantasy_feudalism_items:trophy_heads/ender_dragon"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/enderman/enderman_eyes",
+      "sprite": "fantasy_feudalism_items:trophy_heads/ender_dragon_eyes"
     },
     {
       "type": "minecraft:single",
