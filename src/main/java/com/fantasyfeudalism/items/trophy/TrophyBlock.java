@@ -15,7 +15,15 @@ import net.minecraft.world.phys.BlockHitResult;
 public final class TrophyBlock extends BaseEntityBlock {
     public static final MapCodec<TrophyBlock> CODEC = simpleCodec(properties -> new TrophyBlock(TrophyKind.ZOMBIE, properties));
     public final TrophyKind kind;
-    public TrophyBlock(TrophyKind kind, Properties properties) { super(properties); this.kind = kind; }
+    public TrophyBlock(TrophyKind kind, Properties properties) { super(properties); this.kind = kind; registerDefaultState(defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,Direction.NORTH)); }
+    @Override protected void createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<Block,BlockState> builder){
+        builder.add(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);
+    }
+    @Override public BlockState getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext context){
+        return defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,context.getHorizontalDirection().getOpposite());
+    }
+    @Override protected BlockState rotate(BlockState state,Rotation rotation){return state.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,rotation.rotate(state.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)));}
+    @Override protected BlockState mirror(BlockState state,Mirror mirror){return rotate(state,mirror.getRotation(state.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)));}
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
     @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
     @Override protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext context) {

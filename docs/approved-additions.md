@@ -20,17 +20,17 @@ Wooden Slab Wooden Slab  Wooden Slab
 
 | Trophy | Bonuses | Drawbacks | Particles |
 | --- | --- | --- | --- |
-| Zombie | Resistance-I-equivalent 20% reduction, stacking with other resistance | 25% faster hunger exhaustion | Red dust |
-| Skeleton | 15% more ranged damage | 15% more incoming damage | White dust |
-| Creeper | 40% less explosion damage, movement sounds 50% quieter, hostile detection 25% lower | 20% less melee damage | Green dust |
-| Wither Skeleton | Melee hits have 20% chance of Wither I for four seconds | Half a heart every 30 active seconds | Black smoke |
-| Stray | 15% more damage; attacks apply Slowness I for four seconds, except skeleton-family mobs and polar bears | 25% more fire damage taken | Snow |
-| Bogged | 15% more damage; attacks apply Poison I for four seconds, except undead | 25% more damage from Endermen, Endermites, Dragon, End Crystals and dragon breath | Poison-green dust |
-| Piglin | Gold weapons 15% more damage; gold equipment 30% less durability loss; each gold armor piece adds one armor point | XP orbs destroyed before XP or Mending | Gold dust |
-| Ender Dragon | Endermen/Endermites neutral unless attacked; Night Vision; purple player particles | Water/rain costs half a heart per second; nightly phantoms ignore sleep history | Portal |
-| Player | 15% more damage to other players | Nametag visible 50% farther away, with full range and visibility even while crouching | Enchantment |
+| Zombie | Resistance-I-equivalent 20% reduction, stacking with other resistance | 25% faster hunger exhaustion | Red rising motes |
+| Skeleton | 15% more ranged damage | 15% more incoming damage | White rising motes |
+| Creeper | 40% less explosion damage, movement sounds 50% quieter, hostile detection 25% lower | 20% less melee damage | Green rising motes |
+| Wither Skeleton | Melee hits have 20% chance of Wither I for four seconds | Half a heart every 30 active seconds | Charcoal rising motes |
+| Stray | 15% more damage; attacks apply Slowness I for four seconds, except skeleton-family mobs and polar bears | 25% more fire damage taken | Ice-blue rising motes |
+| Bogged | 15% more damage; attacks apply Poison I for four seconds, except undead | 25% more damage from Endermen, Endermites, Dragon, End Crystals and dragon breath | Poison-green rising motes |
+| Piglin | Gold weapons 15% more damage; gold equipment 30% less durability loss; each gold armor piece adds one armor point | XP orbs destroyed before XP or Mending | Gold rising motes |
+| Ender Dragon | Endermen/Endermites neutral unless attacked; Night Vision; purple player particles | Water/rain costs half a heart per second; nightly phantoms ignore sleep history | Purple rising motes |
+| Player | 15% more damage to other players | Nametag visible 50% farther away, with full range and visibility even while crouching | Pale-blue rising motes |
 
-Placed trophies always emit sparse particles. The owner's currently selected trophy emits them faster and denser. Tooltips describe bonuses and drawbacks. Ordinary damage, armor, enchantments and compatible effects continue stacking. Phantom spawning retains normal sky and difficulty restrictions apart from sleep history.
+Placed trophies keep the orientation chosen at placement, with their fronts toward the placing player. All trophies emit sparse, slow-rising motes; the owner's currently selected trophy emits faster, larger, denser motes with a swirling motion. Hovering its inventory status icon shows every bonus and drawback in both compact and expanded effect layouts. Ordinary damage, armor, enchantments and compatible effects continue stacking. Phantom spawning retains normal sky and difficulty restrictions apart from sleep history.
 
 ## Delegated choices
 

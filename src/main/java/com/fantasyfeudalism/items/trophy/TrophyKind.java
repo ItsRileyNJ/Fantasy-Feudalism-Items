@@ -15,11 +15,14 @@ public enum TrophyKind {
     public final String[] benefits,drawbacks;
     TrophyKind(String[] benefits,String[] drawbacks){this.benefits=benefits;this.drawbacks=drawbacks;}
     public String id(){return name().toLowerCase(java.util.Locale.ROOT);}
-    public void appendTooltip(List<Component> lines){
+    public void appendEffectTooltip(List<Component> lines){
         lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy.bonus").withStyle(ChatFormatting.GREEN));
         for(int i=0;i<benefits.length;i++)lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy."+id()+".benefit."+i).withStyle(ChatFormatting.GRAY));
         lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy.drawback").withStyle(ChatFormatting.RED));
         for(int i=0;i<drawbacks.length;i++)lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy."+id()+".drawback."+i).withStyle(ChatFormatting.GRAY));
+    }
+    public void appendTooltip(List<Component> lines){
+        appendEffectTooltip(lines);
         lines.add(Component.empty());
         lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy.attune").withStyle(ChatFormatting.DARK_GRAY));
         lines.add(Component.translatable("tooltip.fantasy_feudalism_items.trophy.limit").withStyle(ChatFormatting.GOLD));

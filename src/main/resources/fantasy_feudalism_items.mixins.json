@@ -11,7 +11,8 @@
     "TrophyNameDistanceMixin",
     "LightHandMixin",
     "DynamicLightMixin",
-    "ClairvoyanceRenderMixin"
+    "ClairvoyanceRenderMixin",
+    "TrophyEffectTooltipMixin"
   ],
   "injectors": {
     "defaultRequire": 1

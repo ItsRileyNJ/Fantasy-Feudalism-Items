@@ -291,3 +291,35 @@ passed, including distinct opaque material tints, layer isolation and unchanged
 bonuses. The inventory-scale sprite was visually inspected; all five generated
 models use the same sprite and survive full regeneration. Full in-game color
 presentation remains unverified under the existing graphical-display limitation.
+
+### Placement orientation, upward aura and inventory hover details
+
+Trophy blocks now store horizontal facing, chosen opposite the placing player's
+heading so their fronts face that player. The direction stays fixed after
+placement and supports structure rotation/mirroring. All nine exported blockstate
+files include the four horizontal rotations. Older states without a facing
+property use the default north orientation; no camera tracking is added.
+
+All heads now emit colored, gravity-free rising motes. Idle trophies emit one
+small, slow-rising mote per second. Active trophies emit six larger motes every
+two ticks (60/second), with faster ascent, more spread and a swirling motion.
+Client particle physics ensures positive upward velocity, fades particles over
+their lifetime, and retains each trophy's identifying color. Particle providers
+respect normal client particle limits and reuse vanilla dust sprites.
+
+The attunement status icon's inventory hover now shows the trophy name, all
+benefits and all drawbacks using the same translated descriptions as its item.
+Compact layouts use NeoForge's effect-tooltip event; expanded layouts add hover
+details over the effect icon after its labels render, using the actual rendered
+layout positions. This does not force compact mode or change ordinary effects.
+Placement instructions stay on trophy items rather than the status tooltip.
+
+Validation: full build, shader checks and **64/64 server tests** passed. New tests
+cover all nine trophies placed in all four player orientations, fixed direction
+after player movement, structure rotation, every status tooltip's complete effect
+summary, normal-effect isolation, rising velocities, stronger active profiles and
+particle color/type packet roundtrips. Asset checks verify all 36 facing variants,
+vanilla sprite references, retained layered head geometry and regeneration. The
+expanded-tooltip invocation target was checked against patched Minecraft
+bytecode. Full in-game GUI/particle presentation remains unverified due to the
+previously documented lack of an active graphical display.

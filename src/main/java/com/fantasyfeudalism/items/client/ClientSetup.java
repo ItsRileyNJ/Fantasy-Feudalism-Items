@@ -10,6 +10,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.api.distmarker.Dist;
 @EventBusSubscriber(modid=FeudalItems.ID,bus=EventBusSubscriber.Bus.MOD,value=Dist.CLIENT)
 public final class ClientSetup {
+    @SubscribeEvent public static void particles(net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event){
+        event.registerSpriteSet(com.fantasyfeudalism.items.trophy.TrophyParticles.IDLE.get(),sprites->TrophyAuraParticle.provider(sprites,false));
+        event.registerSpriteSet(com.fantasyfeudalism.items.trophy.TrophyParticles.ACTIVE.get(),sprites->TrophyAuraParticle.provider(sprites,true));
+    }
     @SubscribeEvent public static void effectIcons(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent event){
         for(var kind:com.fantasyfeudalism.items.trophy.TrophyKind.values()){
             var item=new ItemStack(com.fantasyfeudalism.items.trophy.Trophies.BLOCKS.get(kind).get());

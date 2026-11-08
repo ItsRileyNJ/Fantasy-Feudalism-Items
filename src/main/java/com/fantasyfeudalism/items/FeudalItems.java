@@ -66,6 +66,7 @@ public final class FeudalItems {
         NeoForge.EVENT_BUS.addListener(com.fantasyfeudalism.items.mount.MountEquipment::join);
         com.fantasyfeudalism.items.trophy.Trophies.init();
         com.fantasyfeudalism.items.trophy.TrophyAttunement.REGISTRY.register(bus);
+        com.fantasyfeudalism.items.trophy.TrophyParticles.REGISTRY.register(bus);
         com.fantasyfeudalism.items.trophy.TrophyRecipes.REGISTRY.register(bus);
         container.registerConfig(ModConfig.Type.SERVER, com.fantasyfeudalism.items.trophy.HeadDrops.SPEC, "fantasy_feudalism_items-head-drops.toml");
         NeoForge.EVENT_BUS.addListener(com.fantasyfeudalism.items.trophy.HeadDrops::drops);

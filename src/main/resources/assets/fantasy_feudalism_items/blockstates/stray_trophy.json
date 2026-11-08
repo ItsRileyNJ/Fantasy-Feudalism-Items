@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "fantasy_feudalism_items:block/stray_trophy"
+    },
+    "facing=east": {
+      "model": "fantasy_feudalism_items:block/stray_trophy",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "fantasy_feudalism_items:block/stray_trophy",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "fantasy_feudalism_items:block/stray_trophy",
+      "y": 270
     }
   }
 }

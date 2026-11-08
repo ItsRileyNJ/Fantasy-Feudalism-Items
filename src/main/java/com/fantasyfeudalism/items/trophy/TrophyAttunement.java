@@ -23,6 +23,15 @@ public final class TrophyAttunement {
             // Drinking milk does not change attunement, so it must not hide its indicator.
         }
     }
+    public static java.util.List<net.minecraft.network.chat.Component> tooltip(MobEffectInstance instance){
+        for(var entry:EFFECTS.entrySet())if(entry.getValue().value()==instance.getEffect().value()){
+            var lines=new java.util.ArrayList<net.minecraft.network.chat.Component>();
+            lines.add(instance.getEffect().value().getDisplayName().copy().withStyle(net.minecraft.ChatFormatting.GOLD));
+            entry.getKey().appendEffectTooltip(lines);
+            return lines;
+        }
+        return java.util.List.of();
+    }
     public static void sync(Player player,TrophyKind active){
         if(player.level().isClientSide)return;
         for(var entry:EFFECTS.entrySet()){

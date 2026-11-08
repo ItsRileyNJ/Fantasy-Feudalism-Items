@@ -206,6 +206,56 @@ public final class TrophyTests {
         h.assertFalse(ledger.recordPlacement(owner,TrophyKind.CREEPER),"A standing type cannot reserve another slot");h.succeed();
     }
     @GameTest(template="empty")
+    public static void placed_trophies_face_the_placer_and_keep_their_orientation(GameTestHelper h){
+        var player=player(h);var pos=h.absolutePos(new BlockPos(3,2,3));
+        var facing=net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+        for(var kind:TrophyKind.values())for(float yaw:new float[]{0,90,180,270}){
+            player.setYRot(yaw);var expected=player.getDirection().getOpposite();
+            h.assertTrue(placeTrophy(h,player,kind,pos).consumesAction(),"Trophy places in every player orientation");
+            var placed=h.getLevel().getBlockState(pos);
+            h.assertTrue(placed.getValue(facing)==expected,"Trophy front faces the placing player");
+            player.setYRot(yaw+90);player.setPos(player.getX()+.1,player.getY(),player.getZ());
+            h.assertTrue(h.getLevel().getBlockState(pos).getValue(facing)==expected,"Moving or turning does not make the placed head track the player");
+            h.assertTrue(placed.rotate(Rotation.CLOCKWISE_90).getValue(facing)==expected.getClockWise(),"Structure rotation preserves trophy facing");
+            h.getLevel().removeBlock(pos,false);
+        }
+        h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void trophy_status_hover_contains_its_benefits_and_drawbacks(GameTestHelper h){
+        for(var kind:TrophyKind.values()){
+            var instance=new net.minecraft.world.effect.MobEffectInstance(TrophyAttunement.EFFECTS.get(kind),-1);
+            var lines=TrophyAttunement.tooltip(instance);
+            var summary=new ArrayList<net.minecraft.network.chat.Component>();kind.appendEffectTooltip(summary);
+            h.assertTrue(lines.size()==1+summary.size(),"Hover contains the trophy name and every benefit/drawback");
+            h.assertTrue(lines.subList(1,lines.size()).equals(summary),"Status hover reuses the same translated effect details as the trophy item");
+            h.assertTrue(summary.size()==2+kind.benefits.length+kind.drawbacks.length,"Every benefit and drawback has its own line under the correct heading");
+            var itemLines=new ArrayList<net.minecraft.network.chat.Component>();kind.appendTooltip(itemLines);
+            h.assertTrue(itemLines.size()>summary.size(),"Placement instructions remain on items rather than cluttering status hover details");
+        }
+        h.assertTrue(TrophyAttunement.tooltip(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED,200)).isEmpty(),"Ordinary potion hover tooltips are unchanged");h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void every_trophy_aura_rises_and_active_auras_are_more_energetic(GameTestHelper h){
+        var idle=TrophyParticles.IDLE_PROFILE;var active=TrophyParticles.ACTIVE_PROFILE;
+        h.assertTrue((double)active.count()/active.interval()>(double)idle.count()/idle.interval()*10,"Attuned trophies emit substantially more particles per second");
+        h.assertTrue(active.rise()>idle.rise()&&active.jitter()>idle.jitter()&&active.size()>idle.size(),"Active particles rise faster, spread more and appear larger");
+        for(var kind:TrophyKind.values()){
+            h.assertTrue(net.minecraft.util.FastColor.ARGB32.alpha(TrophyParticles.color(kind))==255,"Every head has a visible aura color");
+            for(double supplied:new double[]{-.1,0,.1}){
+                h.assertTrue(TrophyParticles.upwardVelocity(idle,supplied)>0&&TrophyParticles.upwardVelocity(active,supplied)>0,"Random input velocities cannot make any aura fall downward");
+            }
+        }
+        var buffer=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),h.getLevel().registryAccess());
+        try{
+            for(var type:List.of(TrophyParticles.IDLE.get(),TrophyParticles.ACTIVE.get())){
+                var option=net.minecraft.core.particles.ColorParticleOption.create(type,TrophyParticles.color(TrophyKind.ENDER_DRAGON));
+                type.streamCodec().encode(buffer,option);var decoded=type.streamCodec().decode(buffer);
+                h.assertTrue(decoded.getType()==type&&decoded.getRed()==option.getRed()&&decoded.getBlue()==option.getBlue(),"Particle packets preserve their provider and trophy color");
+            }
+        }finally{buffer.release();}h.succeed();
+    }
+    @GameTest(template="empty")
     public static void trophy_combat_percentages(GameTestHelper h){
         var player=player(h);var victim=h.spawnWithNoFreeWill(EntityType.COW,3,2,3);
         select(player,TrophyKind.STRAY);var hit=new LivingIncomingDamageEvent(victim,new DamageContainer(h.getLevel().damageSources().playerAttack(player),10));TrophyEffects.damage(hit);h.assertTrue(Math.abs(hit.getAmount()-11.5)<.001,"Stray gives fifteen percent damage bonus");h.assertTrue(victim.hasEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN),"Stray applies Slowness");

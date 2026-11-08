@@ -96,6 +96,10 @@ def generate(root):
             'textures': textures,
             'elements': elements,
         })
+        write(f'assets/{MOD}/blockstates/{kind}_trophy.json', {
+            'variants': {f'facing={direction}': {'model': f'{MOD}:block/{kind}_trophy', **({'y': angle} if angle else {})}
+                         for direction, angle in [('north', 0), ('east', 90), ('south', 180), ('west', 270)]}
+        })
     # Entity skins are not part of the block atlas by default. Referencing the
     # existing resources also respects resource-pack replacements of those skins.
     write('assets/minecraft/atlases/blocks.json', {'sources': sources})
