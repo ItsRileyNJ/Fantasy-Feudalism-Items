@@ -4,7 +4,7 @@
   "ingredients": [
     {
       "type": "neoforge:components",
-      "items": "minecraft:dragon_head",
+      "items": "fantasy_feudalism_items:enderman_head",
       "components": {
         "minecraft:enchantments": {
           "levels": {

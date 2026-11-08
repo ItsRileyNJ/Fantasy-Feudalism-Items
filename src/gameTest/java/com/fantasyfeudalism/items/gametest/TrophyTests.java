@@ -269,6 +269,41 @@ public final class TrophyTests {
         var player=player(h);select(player,TrophyKind.PIGLIN);player.experienceLevel=5;var orb=new ExperienceOrb(h.getLevel(),player.getX(),player.getY(),player.getZ(),10);var event=new PlayerXpEvent.PickupXp(player,orb);TrophyEffects.xp(event);h.assertTrue(event.isCanceled()&&orb.isRemoved(),"XP pickup canceled and orb destroyed before Mending");h.assertTrue(player.experienceLevel==5,"Destroyed orb grants no XP");h.succeed();
     }
     @GameTest(template="empty")
+    public static void enderman_heads_use_the_shared_head_drop_looting_rates(GameTestHelper h){
+        var mob=h.spawnWithNoFreeWill(EntityType.ENDERMAN,3,2,3);var killer=player(h);
+        var previous=HeadDrops.CHANCES.stream().map(v->v.get()).toList();
+        try{
+            for(int looting=0;looting<=4;looting++){
+                for(var chance:HeadDrops.CHANCES)chance.set(0.0);
+                int bucket=Math.min(3,looting);HeadDrops.CHANCES.get(bucket).set(100.0);
+                var sword=new ItemStack(Items.DIAMOND_SWORD);
+                if(looting>0)sword.enchant(h.getLevel().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(net.minecraft.world.item.enchantment.Enchantments.LOOTING),looting);
+                killer.setItemInHand(InteractionHand.MAIN_HAND,sword);
+                var drops=new ArrayList<ItemEntity>();
+                HeadDrops.drops(new LivingDropsEvent(mob,h.getLevel().damageSources().playerAttack(killer),drops,false));
+                h.assertTrue(drops.size()==1&&drops.getFirst().getItem().is(Trophies.ENDERMAN_HEAD.get()),"Enderman uses the same configured chance for each Looting bucket, clamping levels above III");
+                HeadDrops.CHANCES.get(bucket).set(0.0);drops.clear();
+                HeadDrops.drops(new LivingDropsEvent(mob,h.getLevel().damageSources().playerAttack(killer),drops,false));
+                h.assertTrue(drops.isEmpty(),"Zero configured head-drop chance also disables Enderman heads");
+            }
+        }finally{for(int i=0;i<previous.size();i++)HeadDrops.CHANCES.get(i).set(previous.get(i));}h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void enderman_trophy_requires_a_sigil_enderman_head(GameTestHelper h){
+        var head=new ItemStack(Trophies.ENDERMAN_HEAD.get());var mount=new ItemStack(Content.TROPHY_MOUNT.get());
+        h.assertTrue(head.is(Trophies.HEADS),"Enderman heads are eligible for Sigil enchanting");
+        h.assertTrue(Trophies.headKind(head)==TrophyKind.ENDER_DRAGON&&Trophies.headItem(TrophyKind.ENDER_DRAGON)==Trophies.ENDERMAN_HEAD.get(),"Trophy head lookups use Enderman heads");
+        var input=net.minecraft.world.item.crafting.CraftingInput.of(2,1,List.of(head,mount));
+        var manager=h.getLevel().getRecipeManager();
+        h.assertTrue(manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,h.getLevel()).isEmpty(),"Unenchanted Enderman heads cannot craft the trophy");
+        var sigil=h.getLevel().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(Trophies.SIGIL);
+        head.enchant(sigil,1);input=net.minecraft.world.item.crafting.CraftingInput.of(2,1,List.of(head,mount));
+        var recipe=manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,h.getLevel());
+        h.assertTrue(recipe.isPresent()&&recipe.get().value().assemble(input,h.getLevel().registryAccess()).is(Trophies.BLOCKS.get(TrophyKind.ENDER_DRAGON).get().asItem()),"Sigil Enderman Head plus Trophy Mount crafts Enderman Trophy");
+        var dragon=new ItemStack(Items.DRAGON_HEAD);dragon.enchant(sigil,1);
+        h.assertTrue(Trophies.headKind(dragon)==null&&manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,net.minecraft.world.item.crafting.CraftingInput.of(2,1,List.of(dragon,mount)),h.getLevel()).isEmpty(),"Dragon heads no longer substitute for Enderman heads");h.succeed();
+    }
+    @GameTest(template="empty")
     public static void head_drop_probabilities_are_configurable(GameTestHelper h){
         h.assertTrue(Math.abs(HeadDrops.CHANCES.get(3).get()-1.1)<.00001,"Looting III default is one-point-one percent");
         double previous=HeadDrops.CHANCES.getFirst().get();

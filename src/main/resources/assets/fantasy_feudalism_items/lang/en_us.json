@@ -84,5 +84,6 @@
   "effect.fantasy_feudalism_items.attuned_ender_dragon": "Enderman Trophy",
   "effect.fantasy_feudalism_items.attuned_player": "Player Trophy",
   "tooltip.fantasy_feudalism_items.trophy.replacement": "Breaking a trophy frees its slot. Broken trophies drop nothing.",
-  "message.fantasy_feudalism_items.trophy_limit": "You already have a placed trophy of this type. Break it before placing another."
+  "message.fantasy_feudalism_items.trophy_limit": "You already have a placed trophy of this type. Break it before placing another.",
+  "item.fantasy_feudalism_items.enderman_head": "Enderman Head"
 }

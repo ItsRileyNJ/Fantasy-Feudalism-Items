@@ -22,11 +22,11 @@ mod('recipe/saddlebag_dye.json',{'type':MOD+':saddlebag_dye','category':'misc'})
 mod('recipe/kelp_oil.json',{'type':'minecraft:crafting_shapeless','category':'misc','ingredients':[{'item':'minecraft:kelp'},{'item':'minecraft:glass_bottle'}],'result':{'id':MOD+':kelp_oil','count':1}})
 write('data/minecraft/tags/item/swords.json',{'replace':False,'values':[MOD+':bone_dagger']})
 write('data/minecraft/tags/item/dyeable.json',{'replace':False,'values':[MOD+':saddlebag']})
-heads=['zombie_head','skeleton_skull','creeper_head','wither_skeleton_skull','piglin_head','dragon_head','player_head']
-mod('tags/item/sigil_heads.json',{'replace':False,'values':['minecraft:'+h for h in heads]+[MOD+':stray_head',MOD+':bogged_head']})
+heads=['zombie_head','skeleton_skull','creeper_head','wither_skeleton_skull','piglin_head','player_head']
+mod('tags/item/sigil_heads.json',{'replace':False,'values':['minecraft:'+h for h in heads]+[MOD+':stray_head',MOD+':bogged_head',MOD+':enderman_head']})
 mod('enchantment/sigil.json',{'description':{'translate':'enchantment.'+MOD+'.sigil'},'supported_items':'#'+MOD+':sigil_heads','primary_items':'#'+MOD+':sigil_heads','weight':1,'max_level':1,'min_cost':{'base':30,'per_level_above_first':0},'max_cost':{'base':100,'per_level_above_first':0},'anvil_cost':1,'slots':['head'],'effects':{}})
 lang=json.loads((ROOT/f'assets/{MOD}/lang/en_us.json').read_text())
-for name in ['kelp_oil','vial_of_milk','fishing_trap','trophy_mount','saddlebag','saddlebag_half','bone_dagger','stray_head','bogged_head','copper_horseshoe','iron_horseshoe','gold_horseshoe','diamond_horseshoe','netherite_horseshoe','awkward_milk_potion','intermediate_milk_potion','animal_allegiance_potion','extended_animal_allegiance_potion']:
+for name in ['kelp_oil','vial_of_milk','fishing_trap','trophy_mount','saddlebag','saddlebag_half','bone_dagger','stray_head','bogged_head','enderman_head','copper_horseshoe','iron_horseshoe','gold_horseshoe','diamond_horseshoe','netherite_horseshoe','awkward_milk_potion','intermediate_milk_potion','animal_allegiance_potion','extended_animal_allegiance_potion']:
  lang['item.'+MOD+'.'+name]=' '.join(w.capitalize() for w in name.split('_'))
 lang['item.'+MOD+'.animal_allegiance_potion']='Potion of Animal Allegiance'
 lang['item.'+MOD+'.extended_animal_allegiance_potion']='Potion of Animal Allegiance (Extended)'
@@ -77,7 +77,7 @@ for mob,drop in [('zombie','rotten_flesh'),('skeleton','bone'),('spider','string
 write(f'assets/{MOD}/lang/en_us.json',lang)
 
 # Components-aware ordinary recipes appear correctly in the vanilla recipe book.
-head_map={'zombie':'minecraft:zombie_head','skeleton':'minecraft:skeleton_skull','creeper':'minecraft:creeper_head','wither_skeleton':'minecraft:wither_skeleton_skull','stray':MOD+':stray_head','bogged':MOD+':bogged_head','piglin':'minecraft:piglin_head','ender_dragon':'minecraft:dragon_head','player':'minecraft:player_head'}
+head_map={'zombie':'minecraft:zombie_head','skeleton':'minecraft:skeleton_skull','creeper':'minecraft:creeper_head','wither_skeleton':'minecraft:wither_skeleton_skull','stray':MOD+':stray_head','bogged':MOD+':bogged_head','piglin':'minecraft:piglin_head','ender_dragon':MOD+':enderman_head','player':'minecraft:player_head'}
 for kind,head in head_map.items():
  mod('recipe/'+kind+'_trophy.json',{'type':'minecraft:crafting_shapeless','category':'misc','ingredients':[{'type':'neoforge:components','items':head,'components':{'minecraft:enchantments':{'levels':{MOD+':sigil':1}}},'strict':False},{'item':MOD+':trophy_mount'}],'result':{'id':MOD+':'+kind+'_trophy','count':1}})
 old=ROOT/f'data/{MOD}/recipe/trophy.json'
@@ -97,7 +97,7 @@ for path in (ROOT/f'data/{MOD}/recipe').glob('*.json'):
  elif name in ('saddlebag_half','trophy_mount'):ingredient='minecraft:leather'
  else:continue
  mod('advancement/recipes/'+name+'.json',{'criteria':{'has_material':{'trigger':'minecraft:inventory_changed','conditions':{'items':[{'items':ingredient}]}}},'requirements':[['has_material']],'rewards':{'recipes':[MOD+':'+name]}})
-all_items=[MOD+':'+n for n in ['kelp_oil','vial_of_milk','fishing_trap','trophy_mount','saddlebag','saddlebag_half','bone_dagger','stray_head','bogged_head','animal_allegiance_potion','extended_animal_allegiance_potion']]+[MOD+':'+t+'_horseshoe' for t in ['copper','iron','gold','diamond','netherite']]+[MOD+':'+t+'_trophy' for t in head_map]+[MOD+':'+t+'_spawner_eye' for t in ['zombie','skeleton','spider','cave_spider','blaze','magma_cube']]
+all_items=[MOD+':'+n for n in ['kelp_oil','vial_of_milk','fishing_trap','trophy_mount','saddlebag','saddlebag_half','bone_dagger','stray_head','bogged_head','enderman_head','animal_allegiance_potion','extended_animal_allegiance_potion']]+[MOD+':'+t+'_horseshoe' for t in ['copper','iron','gold','diamond','netherite']]+[MOD+':'+t+'_trophy' for t in head_map]+[MOD+':'+t+'_spawner_eye' for t in ['zombie','skeleton','spider','cave_spider','blaze','magma_cube']]
 mod('tags/item/items.json',{'replace':False,'values':all_items})
 def obtained(names):return {'trigger':'minecraft:inventory_changed','conditions':{'items':[{'items':names}]}}
 clair={'trigger':'minecraft:inventory_changed','conditions':{'items':[{'items':['minecraft:potion','minecraft:splash_potion','minecraft:lingering_potion'],'components':{'minecraft:potion_contents':{'potion':MOD+':clairvoyance'}}}]}}

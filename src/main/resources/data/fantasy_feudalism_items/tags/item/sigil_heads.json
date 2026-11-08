@@ -6,9 +6,9 @@
     "minecraft:creeper_head",
     "minecraft:wither_skeleton_skull",
     "minecraft:piglin_head",
-    "minecraft:dragon_head",
     "minecraft:player_head",
     "fantasy_feudalism_items:stray_head",
-    "fantasy_feudalism_items:bogged_head"
+    "fantasy_feudalism_items:bogged_head",
+    "fantasy_feudalism_items:enderman_head"
   ]
 }

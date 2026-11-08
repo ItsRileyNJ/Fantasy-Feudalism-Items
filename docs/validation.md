@@ -344,3 +344,24 @@ Enderman face UVs, emissive eye data, vanilla texture paths/dimensions and stabl
 full regeneration. The NeoForge composite loader and root-transform structure
 were checked against its implementation. Full in-game appearance remains
 unverified due to the existing graphical-display limitation.
+
+### Enderman Head drop and trophy ingredient
+
+Enderman Head is now a registered item, appears in the creative tab and item
+discovery tag, and uses the existing Enderman base/eye textures in a 3D head
+model at normal inventory scale. Endermen enter the same HeadDrops logic as the
+other supported mobs: configurable 0.1/0.4/0.9/1.1 percent defaults at Looting
+0/I/II/III, with higher levels clamped to III.
+
+Enderman Heads are included in the Sigil-enchantable head tag and the trophy
+head lookup. The Enderman Trophy's data recipe now requires a Sigil-enchanted
+Enderman Head plus a Trophy Mount. Plain Enderman Heads and Dragon Heads are
+rejected. The old Dragon Head entry is removed from Sigil eligibility. Existing
+trophy registry IDs and placed trophies are retained for save compatibility.
+Both content and model exporters preserve the new item, tags, recipe and name.
+
+Validation: full build, shader checks and **66/66 server tests** passed. New tests
+exercise Enderman drop configuration at Looting 0 through IV, zero-chance
+suppression, Sigil eligibility, positive recipe assembly and rejection of plain
+Enderman/enchanted Dragon heads. Asset checks cover head/eye layers, inventory
+scale, item tags and stable full regeneration.

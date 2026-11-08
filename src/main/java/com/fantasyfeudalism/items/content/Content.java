@@ -31,6 +31,7 @@ public final class Content {
         for (var block : com.fantasyfeudalism.items.trophy.Trophies.BLOCKS.values()) output.accept(new ItemStack(block.get()));
         output.accept(new ItemStack(com.fantasyfeudalism.items.trophy.Trophies.STRAY_HEAD.get()));
         output.accept(new ItemStack(com.fantasyfeudalism.items.trophy.Trophies.BOGGED_HEAD.get()));
+        output.accept(new ItemStack(com.fantasyfeudalism.items.trophy.Trophies.ENDERMAN_HEAD.get()));
         output.accept(new ItemStack(KELP_OIL.get())); output.accept(new ItemStack(MILK.get()));
         output.accept(new ItemStack(FISHING_TRAP.get())); output.accept(new ItemStack(TROPHY_MOUNT.get()));
     }

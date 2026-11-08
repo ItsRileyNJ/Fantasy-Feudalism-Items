@@ -125,6 +125,19 @@ def generate(root):
             eyes['shade'] = False
             eyes['neoforge_data'] = {'block_light': 15, 'sky_light': 15, 'ambient_occlusion': False}
             elements.append(eyes)
+            item_head = deepcopy(elements[cubes.index(head)])
+            item_head['from'] = [4, 4, 4]
+            item_head['to'] = [12, 12, 12]
+            item_eyes = overlay_cube(item_head, 0.01)
+            item_eyes['shade'] = False
+            item_eyes['neoforge_data'] = eyes['neoforge_data']
+            write(f'assets/{MOD}/models/item/enderman_head.json', {
+                'parent': 'minecraft:block/block', 'render_type': 'minecraft:cutout',
+                'textures': {'head': sprite, 'head_overlay': eye_sprite, 'particle': sprite},
+                'display': {'gui': {'rotation': [30, 45, 0], 'translation': [0, 0, 0], 'scale': [1, 1, 1]},
+                            'ground': {'translation': [0, 3, 0], 'scale': [0.5, 0.5, 0.5]}},
+                'elements': [item_head, item_eyes],
+            })
         result = {
             'parent': 'minecraft:block/block', 'ambientocclusion': source.get('ambientocclusion', True),
             **({'render_type': 'minecraft:cutout'} if kind in HEAD_OVERLAYS or kind == 'ender_dragon' else {}),

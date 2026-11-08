@@ -6,7 +6,7 @@ The README describes the other implemented systems. These rules incorporate the 
 
 Each player can have one placed trophy of each type at a time. Only its owner can attune, with one selection active at a time. Right-clicking another owned trophy replaces the active selection, including while holding an item; the old trophy's bonuses and drawbacks stop. Selection survives logout and unloaded trophy chunks, but death or destruction ends it. Breaking drops nothing and frees the owner's placement slot for that type, so a newly crafted replacement can be placed. Death and chunk unloading do not free a slot while its trophy remains standing. Placed trophies cannot be recovered by pistons.
 
-Normal trophy-mob head drops are configurable: 0.1% without Looting, 0.4% with I, 0.9% with II, 1.1% with III or higher. Special Player/Dragon acquisition and charged-creeper drops remain. Heads have one dedicated enchantment, **Sigil**, offered only in the level-30 enchanting-table slot with normal XP/lapis costs. It only enables crafting. No vanilla head enchantments qualify.
+Normal trophy-mob head drops are configurable: 0.1% without Looting, 0.4% with I, 0.9% with II, 1.1% with III or higher. Player-head acquisition and charged-creeper drops remain unchanged. Enderman Heads use the normal rates; Dragon Heads are no longer trophy ingredients. Heads have one dedicated enchantment, **Sigil**, offered only in the level-30 enchanting-table slot with normal XP/lapis costs. It only enables crafting. No vanilla head enchantments qualify.
 
 One matching Sigil-enchanted head plus one Trophy Mount crafts a trophy. Mount recipe:
 
@@ -37,3 +37,5 @@ Placed trophies keep the orientation chosen at placement, with their fronts towa
 Spawner Eyes use six variants: rotten flesh/zombie, bone/skeleton, string/spider, spider eye/cave spider, blaze rod/blaze and magma cream/magma cube. Their search is limited to a 128-block sphere of loaded chunks, chooses the closest matching normal spawner, and follows vanilla Eye flight/recovery on success. Recipe unlocks use ingredient possession; advancements use obtaining the new items, without additional progression rewards.
 
 Weather defaults are configurable periodic exposure checks, not lightning-strike proximity. Lanterns roll only storm exposure; torches roll storm or ordinary rain, never both for one check. Soul protection is placed-source-only with solid-block line of sight. Trophies use the supplied Blockbench model with stripped spruce and vanilla mob-head textures; other decorative assets may still use placeholders.
+
+Endermen drop Enderman Heads using the shared head-drop configuration: 0.1%, 0.4%, 0.9%, and 1.1% by default at Looting 0/I/II/III (higher levels use III). Apply Sigil to an Enderman Head, then combine it with a Trophy Mount to craft the Enderman Trophy. Dragon heads do not satisfy this recipe.

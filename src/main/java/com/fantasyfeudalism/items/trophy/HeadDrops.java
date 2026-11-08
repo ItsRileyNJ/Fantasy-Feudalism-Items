@@ -22,7 +22,7 @@ public final class HeadDrops {
         if (type == EntityType.ZOMBIE) kind = TrophyKind.ZOMBIE; else if (type == EntityType.SKELETON) kind = TrophyKind.SKELETON;
         else if (type == EntityType.CREEPER) kind = TrophyKind.CREEPER; else if (type == EntityType.WITHER_SKELETON) kind = TrophyKind.WITHER_SKELETON;
         else if (type == EntityType.STRAY) kind = TrophyKind.STRAY; else if (type == EntityType.BOGGED) kind = TrophyKind.BOGGED;
-        else if (type == EntityType.PIGLIN) kind = TrophyKind.PIGLIN; else return;
+        else if (type == EntityType.PIGLIN) kind = TrophyKind.PIGLIN; else if (type == EntityType.ENDERMAN) kind = TrophyKind.ENDER_DRAGON; else return;
         var entity = event.getEntity(); var item = Trophies.headItem(kind);
         boolean charged = event.getSource().getEntity() instanceof net.minecraft.world.entity.monster.Creeper creeper && creeper.isPowered();
         if (charged && event.getDrops().stream().anyMatch(drop -> drop.getItem().is(item))) return;

@@ -19,6 +19,7 @@ public final class Trophies {
     public static final ResourceKey<Enchantment> SIGIL = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(FeudalItems.ID, "sigil"));
     public static final Map<TrophyKind, DeferredBlock<TrophyBlock>> BLOCKS = new EnumMap<>(TrophyKind.class);
     public static final DeferredItem<Item> STRAY_HEAD = Content.ITEMS.registerSimpleItem("stray_head");
+    public static final DeferredItem<Item> ENDERMAN_HEAD = Content.ITEMS.registerSimpleItem("enderman_head");
     public static final DeferredItem<Item> BOGGED_HEAD = Content.ITEMS.registerSimpleItem("bogged_head");
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TrophyEntity>> BLOCK_ENTITY;
     static {
@@ -37,7 +38,7 @@ public final class Trophies {
         if (stack.is(STRAY_HEAD.get())) return TrophyKind.STRAY;
         if (stack.is(BOGGED_HEAD.get())) return TrophyKind.BOGGED;
         if (stack.is(Items.PIGLIN_HEAD)) return TrophyKind.PIGLIN;
-        if (stack.is(Items.DRAGON_HEAD)) return TrophyKind.ENDER_DRAGON;
+        if (stack.is(ENDERMAN_HEAD.get())) return TrophyKind.ENDER_DRAGON;
         if (stack.is(Items.PLAYER_HEAD)) return TrophyKind.PLAYER;
         return null;
     }
@@ -45,7 +46,7 @@ public final class Trophies {
         return switch (kind) {
             case ZOMBIE -> Items.ZOMBIE_HEAD; case SKELETON -> Items.SKELETON_SKULL; case CREEPER -> Items.CREEPER_HEAD;
             case WITHER_SKELETON -> Items.WITHER_SKELETON_SKULL; case STRAY -> STRAY_HEAD.get(); case BOGGED -> BOGGED_HEAD.get();
-            case PIGLIN -> Items.PIGLIN_HEAD; case ENDER_DRAGON -> Items.DRAGON_HEAD; case PLAYER -> Items.PLAYER_HEAD;
+            case PIGLIN -> Items.PIGLIN_HEAD; case ENDER_DRAGON -> ENDERMAN_HEAD.get(); case PLAYER -> Items.PLAYER_HEAD;
         };
     }
     public static void init() {}
