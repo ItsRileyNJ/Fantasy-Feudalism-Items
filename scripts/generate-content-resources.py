@@ -138,3 +138,9 @@ for kind,benefits,drawbacks in re.findall(r'([A-Z_]+)\(new String\[\]\{([^}]+)\}
  for category,values in [('benefit',benefits),('drawback',drawbacks)]:
   for index,line in enumerate(re.findall(r'"([^"\n]+)"',values)):lang[base+kind.lower()+'.'+category+'.'+str(index)]=line
 write(f'assets/{MOD}/lang/en_us.json',lang)
+
+# Attunement indicators use trophy item icons through the client effect extension.
+lang=json.loads((ROOT/f'assets/{MOD}/lang/en_us.json').read_text())
+for kind in colors:
+ lang['effect.'+MOD+'.attuned_'+kind]=lang['block.'+MOD+'.'+kind+'_trophy']
+write(f'assets/{MOD}/lang/en_us.json',lang)

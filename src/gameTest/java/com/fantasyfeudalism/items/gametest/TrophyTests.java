@@ -58,7 +58,7 @@ public final class TrophyTests {
     }
     @GameTest(template="empty")
     public static void right_clicking_another_owned_trophy_replaces_attunement(GameTestHelper h){
-        var owner=player(h);var stranger=h.makeMockPlayer(GameType.SURVIVAL);
+        var owner=onlinePlayer(h);var stranger=h.makeMockPlayer(GameType.SURVIVAL);
         var first=h.absolutePos(new net.minecraft.core.BlockPos(2,2,2));var second=h.absolutePos(new net.minecraft.core.BlockPos(4,2,2));
         var creeper=Trophies.BLOCKS.get(TrophyKind.CREEPER).get();var skeleton=Trophies.BLOCKS.get(TrophyKind.SKELETON).get();
         h.getLevel().setBlockAndUpdate(first,creeper.defaultBlockState());creeper.setPlacedBy(h.getLevel(),first,creeper.defaultBlockState(),owner,new ItemStack(creeper));
@@ -82,7 +82,10 @@ public final class TrophyTests {
         h.assertTrue(TrophyLedger.get(h.getLevel()).active(stranger.getUUID())==null,"Another player's trophy cannot be selected");
         h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"Stranger cannot change owner's selection");
         h.getLevel().removeBlock(second,false);
-        h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"Destroying an inactive trophy preserves the current attunement");h.succeed();
+        h.assertTrue(TrophyEffects.active(owner)==TrophyKind.CREEPER,"Destroying an inactive trophy preserves the current attunement");
+        h.assertTrue(owner.hasEffect(TrophyAttunement.EFFECTS.get(TrophyKind.CREEPER)),"Inactive trophy destruction preserves the current indicator");
+        h.getLevel().removeBlock(first,false);
+        h.assertTrue(TrophyAttunement.EFFECTS.values().stream().noneMatch(owner::hasEffect),"Destroying the active trophy removes its indicator immediately");h.succeed();
     }
     @GameTest(template="empty")
     public static void switching_trophies_clears_previous_night_vision(GameTestHelper h){
@@ -115,6 +118,40 @@ public final class TrophyTests {
         h.assertTrue(TrophyNameRules.distanceMultiplier(player)==1,"Other trophies do not extend nametag range");
         var cow=h.spawnWithNoFreeWill(EntityType.COW,3,2,3);cow.setData(com.fantasyfeudalism.items.content.ModAttachments.TROPHY,TrophyKind.PLAYER.ordinal());
         h.assertTrue(TrophyNameRules.discrete(cow,true)&&TrophyNameRules.distanceMultiplier(cow)==1,"The drawback applies only to players");h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void trophy_status_indicator_matches_each_attunement(GameTestHelper h){
+        var player=player(h);
+        for(var kind:TrophyKind.values()){
+            select(player,kind);TrophyEffects.changed(player);
+            h.assertTrue(TrophyAttunement.EFFECTS.values().stream().filter(player::hasEffect).count()==1,"Exactly one trophy indicator is displayed after switching");
+            var effect=player.getEffect(TrophyAttunement.EFFECTS.get(kind));
+            h.assertTrue(effect!=null&&effect.showIcon()&&!effect.isVisible(),"Selected trophy has a visible status icon without extra particles");
+            h.assertTrue(effect.isInfiniteDuration()&&effect.getAmplifier()==0,"Indicator lasts while attuned without a misleading countdown or level");
+            TrophyEffects.changed(player);
+            h.assertTrue(player.getEffect(TrophyAttunement.EFFECTS.get(kind))==effect,"Unchanged selection does not reapply its status every tick");
+        }
+        h.succeed();
+    }
+    @GameTest(template="empty")
+    public static void trophy_indicator_survives_milk_and_clears_with_attunement(GameTestHelper h){
+        var player=player(h);select(player,TrophyKind.ZOMBIE);TrophyEffects.changed(player);
+        var indicator=TrophyAttunement.EFFECTS.get(TrophyKind.ZOMBIE);
+        player.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.POISON,400));
+        Content.MILK.get().finishUsingItem(new ItemStack(Content.MILK.get()),h.getLevel(),player);
+        h.assertFalse(player.hasEffect(net.minecraft.world.effect.MobEffects.POISON),"Vial still removes a harmful effect");
+        h.assertTrue(player.hasEffect(indicator),"Vial preserves the active trophy indicator");
+        Items.MILK_BUCKET.finishUsingItem(new ItemStack(Items.MILK_BUCKET),h.getLevel(),player);
+        h.assertTrue(player.hasEffect(indicator)&&TrophyEffects.active(player)==TrophyKind.ZOMBIE,"Milk bucket cannot hide unchanged attunement");
+        player.removeEffect(indicator);player.tickCount=20;
+        TrophyEffects.tick(new net.neoforged.neoforge.event.tick.PlayerTickEvent.Post(player));
+        h.assertTrue(player.hasEffect(indicator),"Server reconciliation restores a missing indicator");
+        TrophyLedger.get(h.getLevel()).clear(player.getUUID());TrophyEffects.changed(player);
+        h.assertTrue(TrophyAttunement.EFFECTS.values().stream().noneMatch(player::hasEffect),"Ending attunement clears all trophy indicators");
+        player.addEffect(new net.minecraft.world.effect.MobEffectInstance(indicator,-1));
+        h.assertTrue(TrophyEffects.active(player)==null,"Applying an indicator alone grants no trophy attunement");
+        TrophyEffects.changed(player);
+        h.assertFalse(player.hasEffect(indicator),"Unselected indicators are removed");h.succeed();
     }
     @GameTest(template="empty")
     public static void trophy_combat_percentages(GameTestHelper h){
@@ -186,8 +223,8 @@ public final class TrophyTests {
     }
     @GameTest(template="empty")
     public static void trophy_death_clears_bonus_but_preserves_placement(GameTestHelper h){
-        var player=player(h);select(player,TrophyKind.ZOMBIE);TrophyEffects.clone(new net.neoforged.neoforge.event.entity.player.PlayerEvent.Clone(player,player,true));
-        h.assertTrue(TrophyEffects.active(player)==null,"Death clears active trophy");h.assertTrue(TrophyLedger.get(h.getLevel()).hasPlaced(player.getUUID(),TrophyKind.ZOMBIE),"Death preserves permanent placement restriction");h.succeed();
+        var player=player(h);select(player,TrophyKind.ZOMBIE);TrophyEffects.changed(player);TrophyEffects.clone(new net.neoforged.neoforge.event.entity.player.PlayerEvent.Clone(player,player,true));
+        h.assertTrue(TrophyEffects.active(player)==null,"Death clears active trophy");h.assertTrue(TrophyAttunement.EFFECTS.values().stream().noneMatch(player::hasEffect),"Death clears trophy status indicators");h.assertTrue(TrophyLedger.get(h.getLevel()).hasPlaced(player.getUUID(),TrophyKind.ZOMBIE),"Death preserves permanent placement restriction");h.succeed();
     }
 
     @GameTest(template="empty")

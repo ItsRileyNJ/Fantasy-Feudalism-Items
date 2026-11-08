@@ -12,6 +12,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.api.distmarker.Dist;
 @EventBusSubscriber(modid=FeudalItems.ID,bus=EventBusSubscriber.Bus.MOD,value=Dist.CLIENT)
 public final class ClientSetup {
+    @SubscribeEvent public static void effectIcons(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent event){
+        for(var kind:com.fantasyfeudalism.items.trophy.TrophyKind.values()){
+            var item=new ItemStack(com.fantasyfeudalism.items.trophy.Trophies.BLOCKS.get(kind).get());
+            event.registerMobEffect(new TrophyEffectIcons(item),com.fantasyfeudalism.items.trophy.TrophyAttunement.EFFECTS.get(kind));
+        }
+    }
     @SubscribeEvent public static void screens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event){
         event.<BagMenu,StorageScreen<BagMenu>>register(MountContent.BAG_MENU.get(),(menu,inventory,title)->new StorageScreen<>(menu,inventory,title));event.<MountMenu,StorageScreen<MountMenu>>register(MountContent.MOUNT_MENU.get(),(menu,inventory,title)->new StorageScreen<>(menu,inventory,title));
     }

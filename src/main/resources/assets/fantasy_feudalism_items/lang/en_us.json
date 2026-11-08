@@ -74,5 +74,14 @@
   "tooltip.fantasy_feudalism_items.trophy.ender_dragon.drawback.0": "Water and rain deal half a heart of damage per second.",
   "tooltip.fantasy_feudalism_items.trophy.ender_dragon.drawback.1": "Phantoms may spawn each night, even after you sleep.",
   "tooltip.fantasy_feudalism_items.trophy.player.benefit.0": "Deal 15% more damage to other players.",
-  "tooltip.fantasy_feudalism_items.trophy.player.drawback.0": "Your nametag is visible from 50% farther away, even while crouching."
+  "tooltip.fantasy_feudalism_items.trophy.player.drawback.0": "Your nametag is visible from 50% farther away, even while crouching.",
+  "effect.fantasy_feudalism_items.attuned_zombie": "Zombie Trophy",
+  "effect.fantasy_feudalism_items.attuned_skeleton": "Skeleton Trophy",
+  "effect.fantasy_feudalism_items.attuned_creeper": "Creeper Trophy",
+  "effect.fantasy_feudalism_items.attuned_wither_skeleton": "Wither Skeleton Trophy",
+  "effect.fantasy_feudalism_items.attuned_stray": "Stray Trophy",
+  "effect.fantasy_feudalism_items.attuned_bogged": "Bogged Trophy",
+  "effect.fantasy_feudalism_items.attuned_piglin": "Piglin Trophy",
+  "effect.fantasy_feudalism_items.attuned_ender_dragon": "Ender Dragon Trophy",
+  "effect.fantasy_feudalism_items.attuned_player": "Player Trophy"
 }

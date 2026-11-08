@@ -156,3 +156,24 @@ hooks compile and their invocation targets were checked against Minecraft's
 patched sources/bytecode. The graphical client remains blocked by the missing
 display described above; these results do not establish compatibility with every
 shader or entity-culling mod.
+
+### Active trophy status indicator
+
+Each of the nine trophy types has an informational status effect named after the
+trophy. The HUD and inventory effect list render its actual trophy item model as
+the icon. It has no attribute modifiers or ticking gameplay effects, no added
+particles, and an infinite duration while attuned. The ledger remains the source
+of trophy benefits and drawbacks; applying a marker alone grants no attunement.
+
+Selecting a trophy immediately replaces its marker. Destruction of the active
+trophy and death/respawn clear it; the regular server update reconciles missing
+or stale indicators, including after loading. Milk does not change attunement,
+so neither milk buckets nor Vials of Milk remove its indicator. Unchanged markers
+are retained rather than reapplied or synchronized every second.
+
+Validation: full build, shader checks and **56/56 server tests** passed. Regression
+coverage includes all nine selections, single-marker exclusivity, stable instance
+reuse, switching, active/inactive trophy destruction, death cleanup, milk and
+manual-effect removal/reconciliation. All nine localized effect names match the
+trophy names. Client icon hooks compile; graphical layout remains unverified
+because the environment has no active display, as documented above.

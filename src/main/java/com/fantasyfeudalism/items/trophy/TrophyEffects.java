@@ -77,6 +77,7 @@ public final class TrophyEffects {
         }
     }
     public static void changed(Player player){
+        TrophyAttunement.sync(player,active(player));
         var kind=active(player);String id=kind==null?"":kind.name();var data=player.getPersistentData();
         if(!data.getString("ff_trophy_timer_kind").equals(id)){data.putString("ff_trophy_timer_kind",id);data.putInt("ff_trophy_elapsed",0);}
         if(active(player)!=TrophyKind.ENDER_DRAGON){var owned=OWN_VISION.remove(player);if(owned!=null&&player.getEffect(MobEffects.NIGHT_VISION)==owned&&owned.getDuration()<=240)player.removeEffect(MobEffects.NIGHT_VISION);}
@@ -94,6 +95,7 @@ public final class TrophyEffects {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (event.isWasDeath()) { TrophyLedger.get(player.serverLevel()).clear(player.getUUID()); player.setData(com.fantasyfeudalism.items.content.ModAttachments.TROPHY,-1); player.getPersistentData().remove("fantasy_feudalism_trophy"); }
         else if (event.getOriginal().getPersistentData().contains("fantasy_feudalism_trophy")) player.getPersistentData().putString("fantasy_feudalism_trophy", event.getOriginal().getPersistentData().getString("fantasy_feudalism_trophy"));
+        TrophyAttunement.sync(player,active(player));
     }
     public static void target(LivingChangeTargetEvent event) {
         if (!(event.getNewAboutToBeSetTarget() instanceof Player player)) return;
