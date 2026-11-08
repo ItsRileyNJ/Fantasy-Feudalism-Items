@@ -202,3 +202,27 @@ and inventory inheritance. Both direct and full content regeneration preserve
 these assets. Full build, shader checks and **57/57 server tests** passed,
 including all trophy interaction shapes. The new artwork has not been visually
 verified in a running client; the earlier graphical-display limitation remains.
+
+### Vanilla potion appearance and dedicated item sprites
+
+The Animal Allegiance item-color handler now matches vanilla 1.21's opaque ARGB
+potion tint: the liquid receives an opaque PotionContents color, and the glass
+and stopper layer receives opaque white (-1). The former RGB-only values had
+zero alpha, causing tinted quads to disappear. All four brewing stages retain
+the vanilla potion model's liquid and bottle textures. A regression covers both
+layers of all stages and normal/extended liquid-color consistency.
+
+Trophy Mount now uses a dedicated 16x16 transparent wooden pedestal sprite rather
+than the armor-stand item. Bone Dagger uses a 32x32 transparent import of the
+user's cream bone blade and brown handle design, with vanilla handheld item
+transforms. Source artwork is retained under `art/item-sprites/`; release textures
+are under the mod's `textures/item/` directory. Images were imported using binary
+alpha and nearest-neighbor downsampling with transparent margins. The original
+generated files remain intact in the workspace. The content generator references
+these sprites and no longer restores the armor-stand/stone-sword placeholders.
+
+Validation: full build, shader checks and **58/58 server tests** passed. Both
+imported sprites were visually inspected at inventory scale, have transparent
+backgrounds, and keep all artwork within their canvases. Isolated full resource
+regeneration preserves both models and textures. Actual in-game presentation
+remains unverified because the graphical display limitation above persists.

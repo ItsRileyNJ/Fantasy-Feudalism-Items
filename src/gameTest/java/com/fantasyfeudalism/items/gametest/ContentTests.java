@@ -105,6 +105,16 @@ public final class ContentTests {
         effects.clear();item.get(DataComponents.POTION_CONTENTS).forEachEffect(effects::add);h.assertTrue(effects.getFirst().getDuration()==3600,"Extended allegiance lasts three minutes");h.succeed();
     }
     @GameTest(template="empty")
+    public static void allegiance_potions_use_opaque_vanilla_layer_tints(GameTestHelper h){
+        for(var item:List.of(AnimalAllegiance.AWKWARD.get(),AnimalAllegiance.INTERMEDIATE.get(),AnimalAllegiance.NORMAL.get(),AnimalAllegiance.EXTENDED.get())){
+            var stack=new ItemStack(item);int liquid=AnimalAllegiance.itemColor(stack,0);
+            h.assertTrue(net.minecraft.util.FastColor.ARGB32.alpha(liquid)==255,"Potion liquid must not disappear through zero-alpha tint");
+            h.assertTrue(AnimalAllegiance.itemColor(stack,1)==-1,"Vanilla glass and stopper layer stays opaque white");
+        }
+        h.assertTrue((AnimalAllegiance.itemColor(new ItemStack(AnimalAllegiance.NORMAL.get()),0)&0xFFFFFF)==0xE3BD74,"Normal potion retains its Animal Allegiance liquid color");
+        h.assertTrue(AnimalAllegiance.itemColor(new ItemStack(AnimalAllegiance.NORMAL.get()),0)==AnimalAllegiance.itemColor(new ItemStack(AnimalAllegiance.EXTENDED.get()),0),"Extended potion uses the same vanilla-style liquid color");h.succeed();
+    }
+    @GameTest(template="empty")
     public static void allegiance_excludes_neutral_and_owned_animals(GameTestHelper h){
         var cow=h.spawnWithNoFreeWill(EntityType.COW,2,2,2);var wolf=EntityType.WOLF.create(h.getLevel());var horse=EntityType.HORSE.create(h.getLevel());
         h.assertTrue(AnimalAllegiance.eligible(cow),"Passive cow is eligible");h.assertFalse(AnimalAllegiance.eligible(wolf),"Neutral wolves excluded");

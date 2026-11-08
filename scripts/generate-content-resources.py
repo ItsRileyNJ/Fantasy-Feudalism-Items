@@ -33,7 +33,9 @@ lang['item.'+MOD+'.extended_animal_allegiance_potion']='Potion of Animal Allegia
 lang['effect.'+MOD+'.animal_allegiance']='Animal Allegiance'
 lang['enchantment.'+MOD+'.sigil']='Sigil'
 lang['message.'+MOD+'.attuned']='Attuned to %s'
-for name,texture in [('kelp_oil','honey_bottle'),('vial_of_milk','milk_bucket'),('trophy_mount','armor_stand'),('saddlebag_half','leather'),('bone_dagger','stone_sword'),('stray_head','skeleton_skull'),('bogged_head','zombie_head')]:item(name,'minecraft:item/'+texture)
+for name,texture in [('kelp_oil','honey_bottle'),('vial_of_milk','milk_bucket'),('saddlebag_half','leather'),('stray_head','skeleton_skull'),('bogged_head','zombie_head')]:item(name,'minecraft:item/'+texture)
+item('trophy_mount',MOD+':item/trophy_mount')
+model('item/bone_dagger',{'parent':'minecraft:item/handheld','textures':{'layer0':MOD+':item/bone_dagger'}})
 for name in ['awkward_milk_potion','intermediate_milk_potion','animal_allegiance_potion','extended_animal_allegiance_potion']:model('item/'+name,{'parent':'minecraft:item/potion'})
 for tier,texture in [('copper','copper_ingot'),('iron','iron_ingot'),('gold','gold_ingot'),('diamond','diamond'),('netherite','netherite_ingot')]:item(tier+'_horseshoe','minecraft:item/'+texture)
 # Two-bag model is rendered once on either side of the animal, with the item dye tint.

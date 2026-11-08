@@ -23,6 +23,10 @@ public final class AnimalAllegiance {
     public static final DeferredItem<Item> INTERMEDIATE = Content.ITEMS.register("intermediate_milk_potion", () -> new Drink(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> NORMAL = Content.ITEMS.register("animal_allegiance_potion", () -> new Drink(new Item.Properties().stacksTo(1).component(DataComponents.POTION_CONTENTS, new PotionContents(Optional.empty(), Optional.empty(), List.of(new MobEffectInstance(EFFECT, 1200))))));
     public static final DeferredItem<Item> EXTENDED = Content.ITEMS.register("extended_animal_allegiance_potion", () -> new Drink(new Item.Properties().stacksTo(1).component(DataComponents.POTION_CONTENTS, new PotionContents(Optional.empty(), Optional.empty(), List.of(new MobEffectInstance(EFFECT, 3600))))));
+    /** Vanilla potion layers require opaque ARGB tint colors in Minecraft 1.21. */
+    public static int itemColor(ItemStack stack,int layer){
+        return layer==0?net.minecraft.util.FastColor.ARGB32.opaque(stack.getOrDefault(DataComponents.POTION_CONTENTS,PotionContents.EMPTY).getColor()):-1;
+    }
     private static final String CLAIM = "fantasy_feudalism_allegiance_owner";
     public static final Set<EntityType<?>> PASSIVE = Set.of(EntityType.COW, EntityType.MOOSHROOM, EntityType.SHEEP, EntityType.PIG, EntityType.CHICKEN, EntityType.RABBIT,
         EntityType.HORSE, EntityType.DONKEY, EntityType.MULE, EntityType.CAMEL, EntityType.CAT, EntityType.OCELOT, EntityType.TURTLE,

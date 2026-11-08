@@ -2,10 +2,8 @@ package com.fantasyfeudalism.items.client;
 import com.fantasyfeudalism.items.FeudalItems;
 import com.fantasyfeudalism.items.content.*;
 import com.fantasyfeudalism.items.mount.*;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -23,7 +21,7 @@ public final class ClientSetup {
     }
     @SubscribeEvent public static void colors(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Item event){
         event.register((stack,index)->index==0?DyedItemColor.getOrDefault(stack,0x8B5A2B):0xFFFFFF,MountContent.SADDLEBAG.get());
-        event.register((stack,index)->index==0?stack.getOrDefault(DataComponents.POTION_CONTENTS,PotionContents.EMPTY).getColor():0xFFFFFF,AnimalAllegiance.AWKWARD.get(),AnimalAllegiance.INTERMEDIATE.get(),AnimalAllegiance.NORMAL.get(),AnimalAllegiance.EXTENDED.get());
+        event.register(AnimalAllegiance::itemColor,AnimalAllegiance.AWKWARD.get(),AnimalAllegiance.INTERMEDIATE.get(),AnimalAllegiance.NORMAL.get(),AnimalAllegiance.EXTENDED.get());
     }
     @SuppressWarnings({"rawtypes","unchecked"})
     @SubscribeEvent public static void layers(net.neoforged.neoforge.client.event.EntityRenderersEvent.AddLayers event){
