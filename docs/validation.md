@@ -273,3 +273,21 @@ the replacement wording. Validation: full build, shader checks and **60/60 serve
 tests** passed, including duplicate rejection, replacement at a new position,
 another player breaking the trophy, independent owners/types, inactive trophy
 attunement, and persistence of occupied and freed slots across save/reload.
+
+### Horseshoe material sprites
+
+All five tiers now use the user's two-overlapping-horseshoes design instead of
+material ingot/gem placeholders. A shared 32x32 neutral metal sprite preserves
+identical shape, nail holes, shading and transparency across tiers. Client item
+colors provide opaque copper, iron, gold, diamond and netherite palettes. This
+uses vanilla item-layer tinting; no per-frame texture generation or copies are
+needed. The gold jump bonus and all speed/fall modifiers and recipes are retained.
+The existing Horseshoe constructor remains available for compatibility.
+
+Source artwork is retained at `art/item-sprites/horseshoe.png`; the release sprite
+is `textures/item/horseshoe.png`. The content generator references it for every
+horseshoe tier. Validation: full build, shader checks and **61/61 server tests**
+passed, including distinct opaque material tints, layer isolation and unchanged
+bonuses. The inventory-scale sprite was visually inspected; all five generated
+models use the same sprite and survive full regeneration. Full in-game color
+presentation remains unverified under the existing graphical-display limitation.

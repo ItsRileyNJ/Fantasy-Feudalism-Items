@@ -115,6 +115,19 @@ public final class ContentTests {
         h.assertTrue(AnimalAllegiance.itemColor(new ItemStack(AnimalAllegiance.NORMAL.get()),0)==AnimalAllegiance.itemColor(new ItemStack(AnimalAllegiance.EXTENDED.get()),0),"Extended potion uses the same vanilla-style liquid color");h.succeed();
     }
     @GameTest(template="empty")
+    public static void horseshoe_material_tints_are_distinct_and_opaque(GameTestHelper h){
+        var shoes=List.of(MountContent.COPPER.get(),MountContent.IRON.get(),MountContent.GOLD.get(),MountContent.DIAMOND.get(),MountContent.NETHERITE.get());
+        var colors=new HashSet<Integer>();
+        for(var shoe:shoes){
+            var stack=new ItemStack(shoe);int tint=Horseshoe.itemColor(stack,0);
+            h.assertTrue(net.minecraft.util.FastColor.ARGB32.alpha(tint)==255,"Every horseshoe material tint stays fully visible");
+            h.assertTrue(colors.add(tint),"All five material variants have distinct colors");
+            h.assertTrue(Horseshoe.itemColor(stack,1)==-1,"Only the horseshoe sprite layer is tinted");
+        }
+        h.assertTrue(Horseshoe.itemColor(new ItemStack(Items.STONE),0)==-1,"Other items keep their original color");
+        h.assertTrue(MountContent.COPPER.get().speed==.05&&MountContent.NETHERITE.get().speed==.2&&MountContent.GOLD.get().gold,"Sprite colors preserve existing horseshoe bonuses");h.succeed();
+    }
+    @GameTest(template="empty")
     public static void allegiance_excludes_neutral_and_owned_animals(GameTestHelper h){
         var cow=h.spawnWithNoFreeWill(EntityType.COW,2,2,2);var wolf=EntityType.WOLF.create(h.getLevel());var horse=EntityType.HORSE.create(h.getLevel());
         h.assertTrue(AnimalAllegiance.eligible(cow),"Passive cow is eligible");h.assertFalse(AnimalAllegiance.eligible(wolf),"Neutral wolves excluded");
