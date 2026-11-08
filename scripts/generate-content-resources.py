@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate deterministic placeholder models and the explicitly approved recipes; no advancements."""
+"""Generate content resources and the imported Blockbench trophy models."""
 from pathlib import Path
 import json,zipfile,struct,zlib
 ROOT=Path(__file__).resolve().parents[1]/'src/main/resources'
@@ -47,12 +47,9 @@ for level,parent in [(1,'template_cauldron_level1'),(2,'template_cauldron_level2
 write(f'assets/{MOD}/blockstates/milk_cauldron.json',{'variants':{'level='+str(n):{'model':MOD+':block/milk_cauldron_'+str(n)} for n in (1,2,3)}})
 def loot(block,itemid):mod('loot_table/blocks/'+block+'.json',{'type':'minecraft:block','pools':[{'rolls':1,'entries':[{'type':'minecraft:item','name':itemid}],'conditions':[{'condition':'minecraft:survives_explosion'}]}]})
 loot('fishing_trap',MOD+':fishing_trap');loot('milk_cauldron','minecraft:cauldron')
-colors={'zombie':'mossy_cobblestone','skeleton':'bone_block_side','creeper':'green_concrete','wither_skeleton':'black_concrete','stray':'light_blue_concrete','bogged':'moss_block','piglin':'gold_block','ender_dragon':'obsidian','player':'stone'}
-for kind,texture in colors.items():
+trophy_kinds=('zombie','skeleton','creeper','wither_skeleton','stray','bogged','piglin','ender_dragon','player')
+for kind in trophy_kinds:
  name=kind+'_trophy';lang['block.'+MOD+'.'+name]=' '.join(w.capitalize() for w in name.split('_'))
- faces={side:{'texture':'#side'} for side in ['north','south','east','west','up','down']}
- topfaces={side:{'texture':'#head'} for side in faces}
- model('block/'+name,{'textures':{'side':'minecraft:block/stripped_oak_log','head':'minecraft:block/'+texture,'particle':'minecraft:block/'+texture},'elements':[{'from':[2,0,2],'to':[14,4,14],'faces':faces},{'from':[4,4,4],'to':[12,12,12],'faces':topfaces}]})
  write(f'assets/{MOD}/blockstates/'+name+'.json',{'variants':{'':{'model':MOD+':block/'+name}}})
  model('item/'+name,{'parent':MOD+':block/'+name})
  mod('loot_table/blocks/'+name+'.json',{'type':'minecraft:block','pools':[]})
@@ -141,6 +138,10 @@ write(f'assets/{MOD}/lang/en_us.json',lang)
 
 # Attunement indicators use trophy item icons through the client effect extension.
 lang=json.loads((ROOT/f'assets/{MOD}/lang/en_us.json').read_text())
-for kind in colors:
+for kind in trophy_kinds:
  lang['effect.'+MOD+'.attuned_'+kind]=lang['block.'+MOD+'.'+kind+'_trophy']
 write(f'assets/{MOD}/lang/en_us.json',lang)
+
+# Keep the supplied Blockbench trophy geometry and vanilla head UVs authoritative.
+import runpy
+runpy.run_path(str(Path(__file__).with_name('trophy-models.py')))['generate'](ROOT.parents[2])

@@ -177,3 +177,28 @@ reuse, switching, active/inactive trophy destruction, death cleanup, milk and
 manual-effect removal/reconciliation. All nine localized effect names match the
 trophy names. Client icon hooks compile; graphical layout remains unverified
 because the environment has no active display, as documented above.
+
+### Supplied Blockbench trophy model
+
+`models/Trophy.bbmodel` preserves the uploaded source. All nine trophy block
+models now use its four cubes unchanged: 10x2x10 base, 4x1x4 collar, 2x3x2 post,
+and 8x8x8 head from [4,6,4] to [12,14,12]. The three wooden pieces preserve the
+source face UVs and use stripped spruce log sides/end grain. Head faces use the
+vanilla head/skull texture regions, normalized to each sheet's dimensions. Piglin
+and Ender Dragon use their own head UV layouts; the generic Player Trophy uses
+Steve. The supplied cube geometry is retained rather than replacing it with
+vanilla skull meshes or adding ears, snouts or other mob geometry.
+
+The block atlas adds the vanilla entity textures via single-sprite references,
+without copying textures, so resource-pack replacements remain usable. Trophy
+inventory models and the attunement status icons inherit these updated models.
+The block interaction shape matches all four supplied cubes.
+
+`python3 scripts/trophy-models.py` regenerates the models directly. The normal
+content generator invokes the same exporter instead of writing placeholder
+cubes. Validation checked all nine models against every source cube, stand UVs,
+vanilla texture-file existence/dimensions, normalized head UVs, atlas references,
+and inventory inheritance. Both direct and full content regeneration preserve
+these assets. Full build, shader checks and **57/57 server tests** passed,
+including all trophy interaction shapes. The new artwork has not been visually
+verified in a running client; the earlier graphical-display limitation remains.

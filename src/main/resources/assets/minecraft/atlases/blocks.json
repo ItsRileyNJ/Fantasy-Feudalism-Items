@@ -1,0 +1,49 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/zombie/zombie",
+      "sprite": "fantasy_feudalism_items:trophy_heads/zombie"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/skeleton/skeleton",
+      "sprite": "fantasy_feudalism_items:trophy_heads/skeleton"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/creeper/creeper",
+      "sprite": "fantasy_feudalism_items:trophy_heads/creeper"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/skeleton/wither_skeleton",
+      "sprite": "fantasy_feudalism_items:trophy_heads/wither_skeleton"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/skeleton/stray",
+      "sprite": "fantasy_feudalism_items:trophy_heads/stray"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/skeleton/bogged",
+      "sprite": "fantasy_feudalism_items:trophy_heads/bogged"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/piglin/piglin",
+      "sprite": "fantasy_feudalism_items:trophy_heads/piglin"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/enderdragon/dragon",
+      "sprite": "fantasy_feudalism_items:trophy_heads/ender_dragon"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/player/wide/steve",
+      "sprite": "fantasy_feudalism_items:trophy_heads/player"
+    }
+  ]
+}

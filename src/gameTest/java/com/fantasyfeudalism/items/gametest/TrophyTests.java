@@ -154,6 +154,21 @@ public final class TrophyTests {
         h.assertFalse(player.hasEffect(indicator),"Unselected indicators are removed");h.succeed();
     }
     @GameTest(template="empty")
+    public static void trophy_shape_matches_supplied_stand_and_head(GameTestHelper h){
+        var pos=h.absolutePos(new BlockPos(2,2,2));
+        for(var kind:TrophyKind.values()){
+            var state=Trophies.BLOCKS.get(kind).get().defaultBlockState();
+            var shape=state.getShape(h.getLevel(),pos);
+            var expected=net.minecraft.world.phys.shapes.Shapes.or(
+                net.minecraft.world.level.block.Block.box(3,0,3,13,2,13),
+                net.minecraft.world.level.block.Block.box(6,2,6,10,3,10),
+                net.minecraft.world.level.block.Block.box(7,3,7,9,6,9),
+                net.minecraft.world.level.block.Block.box(4,6,4,12,14,12));
+            h.assertFalse(net.minecraft.world.phys.shapes.Shapes.joinIsNotEmpty(shape,expected,net.minecraft.world.phys.shapes.BooleanOp.NOT_SAME),"Every trophy uses the supplied model's four-piece interaction shape");
+        }
+        h.succeed();
+    }
+    @GameTest(template="empty")
     public static void trophy_combat_percentages(GameTestHelper h){
         var player=player(h);var victim=h.spawnWithNoFreeWill(EntityType.COW,3,2,3);
         select(player,TrophyKind.STRAY);var hit=new LivingIncomingDamageEvent(victim,new DamageContainer(h.getLevel().damageSources().playerAttack(player),10));TrophyEffects.damage(hit);h.assertTrue(Math.abs(hit.getAmount()-11.5)<.001,"Stray gives fifteen percent damage bonus");h.assertTrue(victim.hasEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN),"Stray applies Slowness");

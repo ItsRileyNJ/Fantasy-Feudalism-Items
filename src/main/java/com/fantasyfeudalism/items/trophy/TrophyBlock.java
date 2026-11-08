@@ -19,7 +19,9 @@ public final class TrophyBlock extends BaseEntityBlock {
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
     @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
     @Override protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext context) {
-        return net.minecraft.world.phys.shapes.Shapes.or(Block.box(2, 0, 2, 14, 4, 14), Block.box(4, 4, 4, 12, 12, 12));
+        return net.minecraft.world.phys.shapes.Shapes.or(
+            Block.box(3, 0, 3, 13, 2, 13), Block.box(6, 2, 6, 10, 3, 10),
+            Block.box(7, 3, 7, 9, 6, 9), Block.box(4, 6, 4, 12, 14, 12));
     }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new TrophyEntity(pos, state); }
     @Override public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
