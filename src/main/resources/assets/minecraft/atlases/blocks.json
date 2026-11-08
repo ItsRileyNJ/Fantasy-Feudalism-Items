@@ -27,8 +27,18 @@
     },
     {
       "type": "minecraft:single",
+      "resource": "minecraft:entity/skeleton/stray_overlay",
+      "sprite": "fantasy_feudalism_items:trophy_heads/stray_overlay"
+    },
+    {
+      "type": "minecraft:single",
       "resource": "minecraft:entity/skeleton/bogged",
       "sprite": "fantasy_feudalism_items:trophy_heads/bogged"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:entity/skeleton/bogged_overlay",
+      "sprite": "fantasy_feudalism_items:trophy_heads/bogged_overlay"
     },
     {
       "type": "minecraft:single",

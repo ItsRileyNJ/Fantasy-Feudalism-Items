@@ -33,7 +33,7 @@ lang['item.'+MOD+'.extended_animal_allegiance_potion']='Potion of Animal Allegia
 lang['effect.'+MOD+'.animal_allegiance']='Animal Allegiance'
 lang['enchantment.'+MOD+'.sigil']='Sigil'
 lang['message.'+MOD+'.attuned']='Attuned to %s'
-for name,texture in [('kelp_oil','honey_bottle'),('vial_of_milk','milk_bucket'),('saddlebag_half','leather'),('stray_head','skeleton_skull'),('bogged_head','zombie_head')]:item(name,'minecraft:item/'+texture)
+for name,texture in [('kelp_oil','honey_bottle'),('vial_of_milk','milk_bucket'),('saddlebag_half','leather')]:item(name,'minecraft:item/'+texture)
 item('trophy_mount',MOD+':item/trophy_mount')
 model('item/bone_dagger',{'parent':'minecraft:item/handheld','textures':{'layer0':MOD+':item/bone_dagger'}})
 for name in ['awkward_milk_potion','intermediate_milk_potion','animal_allegiance_potion','extended_animal_allegiance_potion']:model('item/'+name,{'parent':'minecraft:item/potion'})
@@ -107,20 +107,6 @@ for name,title,description,icon,criterion in [('clairvoyance','A Clearer View','
 
 for torch in ['torch','soul_torch']:
  write('assets/minecraft/models/item/'+torch+'.json',{'parent':'minecraft:item/generated','loader':'neoforge:item_layers','render_types':{'minecraft:cutout':[0]},'neoforge_data':{'layers':{'0':{'block_light':15,'sky_light':15,'ambient_occlusion':False}}},'textures':{'layer0':'minecraft:block/'+torch},'overrides':[{'predicate':{MOD+':off':1},'model':MOD+':block/unlit_torch'}]})
-
-for name,color in [('stray_head',(177,190,195)),('bogged_head',(102,121,71))]:
- rows=[]
- for y in range(16):
-  row=bytearray()
-  for x in range(16):
-   pixel=(0,0,0,0)
-   if 3<=x<=12 and 3<=y<=12:pixel=(*color,255)
-   if 5<=y<=7 and (4<=x<=6 or 9<=x<=11):pixel=(30,35,26,255)
-   if 9<=y<=10 and 6<=x<=9:pixel=(45,48,34,255)
-   row.extend(pixel)
-  rows.append(b'\0'+row)
- p=ROOT/f'assets/{MOD}/textures/item/{name}.png';p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',16,16,8,6,0,0,0))+chunk(b'IDAT',zlib.compress(b''.join(rows)))+chunk(b'IEND',b''))
- item(name,MOD+':item/'+name)
 
 lang['item.'+MOD+'.vial_of_milk']='Vial of Milk'
 lang['item.'+MOD+'.awkward_milk_potion']='Awkward Milk-Based Potion'

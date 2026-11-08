@@ -1,6 +1,202 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
   "textures": {
-    "layer0": "fantasy_feudalism_items:item/bogged_head"
-  }
+    "head": "fantasy_feudalism_items:trophy_heads/bogged",
+    "head_overlay": "fantasy_feudalism_items:trophy_heads/bogged_overlay",
+    "particle": "fantasy_feudalism_items:trophy_heads/bogged"
+  },
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        45,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        4,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        12
+      ],
+      "shade": true,
+      "faces": {
+        "north": {
+          "uv": [
+            2.0,
+            4.0,
+            4.0,
+            8.0
+          ],
+          "texture": "#head"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            4.0,
+            2.0,
+            8.0
+          ],
+          "texture": "#head"
+        },
+        "south": {
+          "uv": [
+            6.0,
+            4.0,
+            8.0,
+            8.0
+          ],
+          "texture": "#head"
+        },
+        "west": {
+          "uv": [
+            4.0,
+            4.0,
+            6.0,
+            8.0
+          ],
+          "texture": "#head"
+        },
+        "up": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            4.0
+          ],
+          "texture": "#head"
+        },
+        "down": {
+          "uv": [
+            4.0,
+            4.0,
+            6.0,
+            0.0
+          ],
+          "texture": "#head"
+        }
+      }
+    },
+    {
+      "from": [
+        3.8,
+        3.8,
+        3.8
+      ],
+      "to": [
+        12.2,
+        12.2,
+        12.2
+      ],
+      "shade": true,
+      "faces": {
+        "north": {
+          "uv": [
+            2.0,
+            4.0,
+            4.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            4.0,
+            2.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "south": {
+          "uv": [
+            6.0,
+            4.0,
+            8.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "west": {
+          "uv": [
+            4.0,
+            4.0,
+            6.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "up": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            4.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "down": {
+          "uv": [
+            4.0,
+            4.0,
+            6.0,
+            0.0
+          ],
+          "texture": "#head_overlay"
+        }
+      }
+    }
+  ]
 }

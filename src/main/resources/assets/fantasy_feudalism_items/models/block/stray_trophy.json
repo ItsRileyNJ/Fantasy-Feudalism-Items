@@ -1,11 +1,13 @@
 {
   "parent": "minecraft:block/block",
   "ambientocclusion": true,
+  "render_type": "minecraft:cutout",
   "textures": {
     "wood": "minecraft:block/stripped_spruce_log",
     "wood_top": "minecraft:block/stripped_spruce_log_top",
     "head": "fantasy_feudalism_items:trophy_heads/stray",
-    "particle": "minecraft:block/stripped_spruce_log"
+    "particle": "minecraft:block/stripped_spruce_log",
+    "head_overlay": "fantasy_feudalism_items:trophy_heads/stray_overlay"
   },
   "elements": [
     {
@@ -281,6 +283,75 @@
             0.0
           ],
           "texture": "#head"
+        }
+      }
+    },
+    {
+      "from": [
+        3.75,
+        5.75,
+        3.75
+      ],
+      "to": [
+        12.25,
+        14.25,
+        12.25
+      ],
+      "shade": true,
+      "faces": {
+        "north": {
+          "uv": [
+            2.0,
+            4.0,
+            4.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            4.0,
+            2.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "south": {
+          "uv": [
+            6.0,
+            4.0,
+            8.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "west": {
+          "uv": [
+            4.0,
+            4.0,
+            6.0,
+            8.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "up": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            4.0
+          ],
+          "texture": "#head_overlay"
+        },
+        "down": {
+          "uv": [
+            4.0,
+            4.0,
+            6.0,
+            0.0
+          ],
+          "texture": "#head_overlay"
         }
       }
     }

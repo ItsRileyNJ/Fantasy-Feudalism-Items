@@ -226,3 +226,26 @@ imported sprites were visually inspected at inventory scale, have transparent
 backgrounds, and keep all artwork within their canvases. Isolated full resource
 regeneration preserves both models and textures. Actual in-game presentation
 remains unverified because the graphical display limitation above persists.
+
+### Layered Bogged and Stray heads
+
+The Bogged skin stores important facial details on `bogged_overlay`, which was
+missing from the trophy. Both skeleton variants now use their base and outer
+head textures, with cutout rendering so transparent texels do not become opaque
+patches. Outer cubes use the vanilla expansions (Bogged 0.2, Stray 0.25 model
+units); the supplied stand and base head cubes remain unchanged. No new mushroom
+or other extra decorative geometry is introduced.
+
+The mod's Bogged and Stray head drops now use 3D models with the same skin layers
+and head UVs as the trophies. The old flat placeholder PNGs are removed. Their
+existing item registrations, drops and Sigil recipes are unchanged. Both base
+and overlay sheets are referenced through the block atlas, retaining resource
+pack compatibility. The content exporter regenerates both standalone head models
+and their trophy layers, and no longer writes placeholder head sprites.
+
+Validation: full build, shader checks and **58/58 server tests** passed. Asset
+checks confirm 64x32 source sheets, correct head-face UVs, expanded overlay bounds,
+cutout rendering, exact preservation of the four supplied base cubes, removal of
+placeholder references and stable full regeneration. The composed Bogged face
+was visually inspected and contains its missing facial detail. Full in-game 3D
+rendering remains unverified under the existing display limitation.
