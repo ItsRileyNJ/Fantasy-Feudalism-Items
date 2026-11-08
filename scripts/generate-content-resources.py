@@ -51,7 +51,7 @@ def loot(block,itemid):mod('loot_table/blocks/'+block+'.json',{'type':'minecraft
 loot('fishing_trap',MOD+':fishing_trap');loot('milk_cauldron','minecraft:cauldron')
 trophy_kinds=('zombie','skeleton','creeper','wither_skeleton','stray','bogged','piglin','ender_dragon','player')
 for kind in trophy_kinds:
- name=kind+'_trophy';lang['block.'+MOD+'.'+name]=' '.join(w.capitalize() for w in name.split('_'))
+ name=kind+'_trophy';lang['block.'+MOD+'.'+name]='Enderman Trophy' if kind=='ender_dragon' else ' '.join(w.capitalize() for w in name.split('_'))
  write(f'assets/{MOD}/blockstates/'+name+'.json',{'variants':{'facing='+direction:{'model':MOD+':block/'+name,**({'y':angle} if angle else {})} for direction,angle in [('north',0),('east',90),('south',180),('west',270)]}})
  model('item/'+name,{'parent':MOD+':block/'+name})
  mod('loot_table/blocks/'+name+'.json',{'type':'minecraft:block','pools':[]})

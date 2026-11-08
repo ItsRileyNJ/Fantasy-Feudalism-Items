@@ -33,7 +33,7 @@
   "block.fantasy_feudalism_items.stray_trophy": "Stray Trophy",
   "block.fantasy_feudalism_items.bogged_trophy": "Bogged Trophy",
   "block.fantasy_feudalism_items.piglin_trophy": "Piglin Trophy",
-  "block.fantasy_feudalism_items.ender_dragon_trophy": "Ender Dragon Trophy",
+  "block.fantasy_feudalism_items.ender_dragon_trophy": "Enderman Trophy",
   "block.fantasy_feudalism_items.player_trophy": "Player Trophy",
   "item.fantasy_feudalism_items.zombie_spawner_eye": "Zombie Spawner Eye",
   "item.fantasy_feudalism_items.skeleton_spawner_eye": "Skeleton Spawner Eye",
@@ -81,7 +81,7 @@
   "effect.fantasy_feudalism_items.attuned_stray": "Stray Trophy",
   "effect.fantasy_feudalism_items.attuned_bogged": "Bogged Trophy",
   "effect.fantasy_feudalism_items.attuned_piglin": "Piglin Trophy",
-  "effect.fantasy_feudalism_items.attuned_ender_dragon": "Ender Dragon Trophy",
+  "effect.fantasy_feudalism_items.attuned_ender_dragon": "Enderman Trophy",
   "effect.fantasy_feudalism_items.attuned_player": "Player Trophy",
   "tooltip.fantasy_feudalism_items.trophy.replacement": "Breaking a trophy frees its slot. Broken trophies drop nothing.",
   "message.fantasy_feudalism_items.trophy_limit": "You already have a placed trophy of this type. Break it before placing another."

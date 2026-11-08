@@ -27,7 +27,7 @@ Wooden Slab Wooden Slab  Wooden Slab
 | Stray | 15% more damage; attacks apply Slowness I for four seconds, except skeleton-family mobs and polar bears | 25% more fire damage taken | Ice-blue rising motes |
 | Bogged | 15% more damage; attacks apply Poison I for four seconds, except undead | 25% more damage from Endermen, Endermites, Dragon, End Crystals and dragon breath | Poison-green rising motes |
 | Piglin | Gold weapons 15% more damage; gold equipment 30% less durability loss; each gold armor piece adds one armor point | XP orbs destroyed before XP or Mending | Gold rising motes |
-| Ender Dragon | Endermen/Endermites neutral unless attacked; Night Vision; purple player particles | Water/rain costs half a heart per second; nightly phantoms ignore sleep history | Purple rising motes |
+| Enderman | Endermen/Endermites neutral unless attacked; Night Vision; purple player particles | Water/rain costs half a heart per second; nightly phantoms ignore sleep history | Purple rising motes |
 | Player | 15% more damage to other players | Nametag visible 50% farther away, with full range and visibility even while crouching | Pale-blue rising motes |
 
 Placed trophies keep the orientation chosen at placement, with their fronts toward the placing player. All trophies emit sparse, slow-rising motes; the owner's currently selected trophy emits faster, larger, denser motes with a swirling motion. Hovering its inventory status icon shows every bonus and drawback in both compact and expanded effect layouts. Ordinary damage, armor, enchantments and compatible effects continue stacking. Phantom spawning retains normal sky and difficulty restrictions apart from sleep history.
