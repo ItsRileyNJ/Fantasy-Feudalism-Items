@@ -84,7 +84,7 @@ def generate(root):
                 'parent': 'minecraft:block/block', 'render_type': 'minecraft:cutout',
                 'textures': {'head': sprite, 'head_overlay': overlay_sprite, 'particle': sprite},
                 'display': {
-                    'gui': {'rotation': [30, 45, 0], 'translation': [0, 0, 0], 'scale': [1.5, 1.5, 1.5]},
+                    'gui': {'rotation': [30, 45, 0], 'translation': [0, 0, 0], 'scale': [1, 1, 1]},
                     'ground': {'rotation': [0, 0, 0], 'translation': [0, 3, 0], 'scale': [0.5, 0.5, 0.5]},
                     'thirdperson_righthand': {'rotation': [45, 45, 0], 'translation': [0, 3, 0], 'scale': [0.5, 0.5, 0.5]},
                 },
