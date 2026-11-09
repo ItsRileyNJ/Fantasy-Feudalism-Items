@@ -8,7 +8,7 @@
       "predicate": {
         "fantasy_feudalism_items:off": 1
       },
-      "model": "fantasy_feudalism_items:block/unlit_torch"
+      "model": "fantasy_feudalism_items:item/burnt_out_torch"
     }
   ],
   "loader": "neoforge:item_layers",

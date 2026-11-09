@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/wall_torch",
   "textures": {
-    "torch": "minecraft:block/stripped_dark_oak_log"
+    "torch": "fantasy_feudalism_items:block/burnt_out_torch"
   }
 }

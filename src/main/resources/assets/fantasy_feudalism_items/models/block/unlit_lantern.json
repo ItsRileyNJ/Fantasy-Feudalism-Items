@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/lantern",
   "textures": {
-    "lantern": "minecraft:block/iron_block"
+    "lantern": "fantasy_feudalism_items:block/burnt_out_lantern"
   }
 }

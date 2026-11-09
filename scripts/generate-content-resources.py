@@ -110,8 +110,13 @@ mod('advancement/root.json',{'display':{'icon':{'id':MOD+':trophy_mount'},'title
 for name,title,description,icon,criterion in [('clairvoyance','A Clearer View','Obtain a Potion of Clairvoyance','minecraft:potion',clair),('animal_allegiance','Animal Allegiance','Obtain a Potion of Animal Allegiance',MOD+':animal_allegiance_potion',obtained([MOD+':animal_allegiance_potion',MOD+':extended_animal_allegiance_potion'])),('saddlebag','Pack for the Road','Obtain a Saddlebag',MOD+':saddlebag',obtained(MOD+':saddlebag')),('horseshoe','A Better Pace','Obtain a Horseshoe',MOD+':iron_horseshoe',obtained([MOD+':'+t+'_horseshoe' for t in ['copper','iron','gold','diamond','netherite']])),('trophy','A Lasting Trophy','Obtain a Mob Trophy',MOD+':zombie_trophy',obtained([MOD+':'+k+'_trophy' for k in head_map])),('fishing_trap','River Harvest','Obtain a Fishing Trap',MOD+':fishing_trap',obtained(MOD+':fishing_trap'))]:
  mod('advancement/'+name+'.json',{'parent':MOD+':root','display':{'icon':{'id':icon},'title':title,'description':description,'frame':'task','show_toast':True,'announce_to_chat':True},'criteria':{'obtain':criterion},'requirements':[['obtain']]})
 
+# Extinguished models retain vanilla UVs and ordinary (non-emissive) shading.
+for name,parent,kind in [('unlit_torch','torch','torch'),('unlit_wall_torch','wall_torch','torch'),('unlit_lantern','lantern','lantern'),('unlit_lantern_hanging','lantern_hanging','lantern')]:
+ model('block/'+name,{'parent':'minecraft:block/'+parent,'textures':{kind:MOD+':block/burnt_out_'+kind}})
+model('item/burnt_out_torch',{'parent':'minecraft:item/generated','textures':{'layer0':MOD+':block/burnt_out_torch'}})
+
 for torch in ['torch','soul_torch']:
- write('assets/minecraft/models/item/'+torch+'.json',{'parent':'minecraft:item/generated','loader':'neoforge:item_layers','render_types':{'minecraft:cutout':[0]},'neoforge_data':{'layers':{'0':{'block_light':15,'sky_light':15,'ambient_occlusion':False}}},'textures':{'layer0':'minecraft:block/'+torch},'overrides':[{'predicate':{MOD+':off':1},'model':MOD+':block/unlit_torch'}]})
+ write('assets/minecraft/models/item/'+torch+'.json',{'parent':'minecraft:item/generated','loader':'neoforge:item_layers','render_types':{'minecraft:cutout':[0]},'neoforge_data':{'layers':{'0':{'block_light':15,'sky_light':15,'ambient_occlusion':False}}},'textures':{'layer0':'minecraft:block/'+torch},'overrides':[{'predicate':{MOD+':off':1},'model':MOD+':item/burnt_out_torch'}]})
 
 lang['item.'+MOD+'.vial_of_milk']='Vial of Milk'
 lang['item.'+MOD+'.awkward_milk_potion']='Awkward Milk-Based Potion'
