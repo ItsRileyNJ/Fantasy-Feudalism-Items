@@ -56,6 +56,23 @@ public final class ClientSmoke {
                 check(entityLight(holder)==10,"Offhand soul lights emit their vanilla brightness");
                 holder.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.LANTERN));
                 check(entityLight(holder)==15,"Multiple held lights use the brightest source");
+                var renderPlayer=client.player;
+                var savedMain=renderPlayer.getMainHandItem().copy();var savedOff=renderPlayer.getOffhandItem().copy();
+                try{
+                    renderPlayer.setItemSlot(EquipmentSlot.OFFHAND,ItemStack.EMPTY);
+                    var renderer=client.getEntityRenderDispatcher();
+                    for(var item:List.of(Items.TORCH,Items.SOUL_TORCH,Items.LANTERN,Items.SOUL_LANTERN)){
+                        renderPlayer.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(item));
+                        int packed=renderer.getPackedLightCoords(renderPlayer,1);
+                        check((packed&0xFFFF)>=entityLight(renderPlayer)*16,"Player render light includes held "+item);
+                        check((packed&0xFFFF)<=240,"Held light stays within the player lightmap bounds");
+                    }
+                    renderPlayer.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+                    renderPlayer.setItemSlot(EquipmentSlot.OFFHAND,new ItemStack(Items.TORCH));
+                    check((renderer.getPackedLightCoords(renderPlayer,1)&0xFFFF)>=224,"Offhand torch lights the player and first-person hands");
+                }finally{
+                    renderPlayer.setItemSlot(EquipmentSlot.MAINHAND,savedMain);renderPlayer.setItemSlot(EquipmentSlot.OFFHAND,savedOff);
+                }
                 var before=new ItemStack(Items.LANTERN);var after=before.copy();LightItemFuel.set(after,80,true);
                 net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,before,0);
                 check(!net.neoforged.neoforge.client.ClientHooks.shouldCauseReequipAnimation(before,after,0),"Fuel countdown does not replay main-hand equip animation");

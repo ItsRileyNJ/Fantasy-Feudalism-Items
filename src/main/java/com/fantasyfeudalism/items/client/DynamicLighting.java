@@ -38,6 +38,14 @@ public final class DynamicLighting {
         if(MountEquipment.supported(entity))light=Math.max(light,itemLight(MountVisuals.lantern(entity)));
         return light;
     }
+    public static int entityLightAt(Entity entity,float partialTick,int packed){
+        if(!enabled)return packed;
+        var probe=entity.getLightProbePosition(partialTick);
+        long section=net.minecraft.core.SectionPos.asLong((int)Math.floor(probe.x)>>4,(int)Math.floor(probe.y)>>4,(int)Math.floor(probe.z)>>4);
+        int nearby=lightAt(sources.getOrDefault(section,List.of()),probe.x,probe.y,probe.z,packed);
+        // Sample the holder immediately, including before the next terrain snapshot update.
+        return com.fantasyfeudalism.items.lighting.GlowOil.mergeLight(nearby,entityLight(entity));
+    }
     public static int lightAt(List<Source> lights,double x,double y,double z,int packed){
         if((packed&0xFFFF)>=240||lights.isEmpty())return packed;
         double light=0;

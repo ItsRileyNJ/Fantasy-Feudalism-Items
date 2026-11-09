@@ -13,7 +13,8 @@
     "DynamicLightMixin",
     "ClairvoyanceRenderMixin",
     "TrophyEffectTooltipMixin",
-    "GlowOilBlockMixin"
+    "GlowOilBlockMixin",
+    "EntityLightMixin"
   ],
   "injectors": {
     "defaultRequire": 1
