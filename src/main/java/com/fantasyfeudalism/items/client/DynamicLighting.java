@@ -22,15 +22,14 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 public final class DynamicLighting {
     public record Source(double x,double y,double z,int brightness) {}
     private static volatile Map<Long,List<Source>> sources=Map.of();
-    private static Map<Integer,Source> previous=Map.of();
+    private static Map<Object,Source> previous=Map.of();
     private static ClientLevel world;
     private static final int UPDATE_INTERVAL_TICKS=3;
     private static int ticks;
     private static volatile boolean enabled;
 
     public static int itemLight(ItemStack stack){
-        var state=LightItemFuel.state(stack);
-        return state!=null&&LightItemFuel.lit(stack)?state.getLightEmission():0;
+        return com.fantasyfeudalism.items.lighting.GlowOil.potential(stack);
     }
     public static int entityLight(Entity entity){
         int light=0;
@@ -48,7 +47,7 @@ public final class DynamicLighting {
             if(distanceSquared<source.brightness()*source.brightness())light=Math.max(light,source.brightness()-Math.sqrt(distanceSquared));
         }
         // Packed block light occupies bits 4..7, with fractional precision in the low bits.
-        return (packed&~0xFFFF)|Math.max(packed&0xFFFF,(int)(light*16));
+        return com.fantasyfeudalism.items.lighting.GlowOil.mergeLight(packed,light);
     }
     public static int lightAt(BlockPos pos,int packed){if(!enabled)return packed;return lightAt(sources.getOrDefault(net.minecraft.core.SectionPos.asLong(pos.getX()>>4,pos.getY()>>4,pos.getZ()>>4),List.of()),pos.getX(),pos.getY(),pos.getZ(),packed);}
 
@@ -73,10 +72,17 @@ public final class DynamicLighting {
         var client=Minecraft.getInstance();
         updateShaderState(client);
         if(!enabled||world==null||client.isPaused()||++ticks%UPDATE_INTERVAL_TICKS!=0)return;
-        Map<Integer,Source> next=new HashMap<>();
+        Map<Object,Source> next=new HashMap<>();
         for(var entity:world.entitiesForRendering()){
             int light=entityLight(entity);
             if(light>0&&!entity.isRemoved())next.put(entity.getId(),new Source(entity.getX(),entity.getY()+entity.getBbHeight()*0.5,entity.getZ(),light));
+        }
+        for(var pos:PlacedGlowLights.positions(world)){
+            if(!world.hasChunkAt(pos))continue;
+            var state=world.getBlockState(pos);
+            if(!com.fantasyfeudalism.items.lighting.GlowOil.fueled(state)){PlacedGlowLights.track(world,pos,state);continue;}
+            int light=com.fantasyfeudalism.items.lighting.GlowOil.potential(state);
+            if(light>0)next.put(pos,new Source(pos.getX()+.5,pos.getY()+.5,pos.getZ()+.5,light));
         }
         Map<Long,List<Source>> buckets=new HashMap<>();
         for(var source:next.values()){

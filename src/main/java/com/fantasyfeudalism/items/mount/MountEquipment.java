@@ -72,7 +72,8 @@ public final class MountEquipment {
     public static long remaining(ItemStack lantern){return LightItemFuel.remaining(lantern);}
     public static boolean lit(ItemStack lantern){return LightItemFuel.lit(lantern);}
     public static void toggle(ItemStack lantern){LightItemFuel.setStage(lantern,LightItemFuel.stage(lantern),!lit(lantern));}
-    public static void refill(ItemStack lantern){boolean wasEmpty=remaining(lantern)==0;LightItemFuel.setStage(lantern,3,wasEmpty||lit(lantern));}
+    public static void refill(ItemStack lantern){refill(lantern,false);}
+    public static void refill(ItemStack lantern,boolean glow){boolean wasEmpty=remaining(lantern)==0;LightItemFuel.setStage(lantern,3,wasEmpty||lit(lantern));GlowOil.set(lantern,glow);}
     public static void tick(EntityTickEvent.Post event){
         if(!(event.getEntity() instanceof AbstractHorse horse)||horse.level().isClientSide||!supported(horse)||horse.level().getGameTime()%20!=0)return;
         apply(horse);

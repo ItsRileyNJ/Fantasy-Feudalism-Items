@@ -115,6 +115,6 @@ public final class LightItemFuel {
     public static void drops(BlockDropsEvent event){
         if(!WeatherLighting.supported(event.getState().getBlock()))return;
         long fuel=LightFuel.remaining(event.getLevel(),event.getPos());boolean on=event.getState().getValue(BlockStateProperties.LIT);
-        for(var drop:event.getDrops())if(state(drop.getItem())!=null)set(drop.getItem(),fuel,on);
+        for(var drop:event.getDrops())if(state(drop.getItem())!=null){set(drop.getItem(),fuel,on);GlowOil.set(drop.getItem(),GlowOil.fueled(event.getState()));}
     }
 }

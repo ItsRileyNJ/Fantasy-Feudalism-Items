@@ -14,11 +14,11 @@ abstract class LanternMixin extends Block {
     private void feudalItems$properties(StateDefinition.Builder<Block, BlockState> builder, CallbackInfo ci) {
         // Subclasses such as Supplementaries Squared's copper lantern define LIT
         // themselves after calling super. Adding it here duplicates that property.
-        if (((Object)this).getClass() == LanternBlock.class) builder.add(BlockStateProperties.LIT);
+        if (((Object)this).getClass() == LanternBlock.class) builder.add(BlockStateProperties.LIT,com.fantasyfeudalism.items.lighting.GlowOil.FUEL);
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void feudalItems$defaults(BlockBehaviour.Properties properties, CallbackInfo ci) {
         if (((Object)this).getClass() == LanternBlock.class)
-            registerDefaultState(defaultBlockState().setValue(BlockStateProperties.LIT, true));
+            registerDefaultState(defaultBlockState().setValue(BlockStateProperties.LIT, true).setValue(com.fantasyfeudalism.items.lighting.GlowOil.FUEL,false));
     }
 }

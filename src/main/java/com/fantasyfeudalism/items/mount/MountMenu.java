@@ -27,8 +27,8 @@ public final class MountMenu extends ChestMenu {
         if(slot==3&&button==1&&!getContainer().getItem(3).isEmpty()){
             var lantern=getContainer().getItem(3);
             if(type==ClickType.QUICK_MOVE){MountEquipment.toggle(lantern);getContainer().setChanged();broadcastChanges();return;}
-            if(type==ClickType.PICKUP&&getCarried().is(com.fantasyfeudalism.items.content.Content.KELP_OIL.get())&&lantern.is(Items.LANTERN)){
-                MountEquipment.refill(lantern);
+            if(type==ClickType.PICKUP&&com.fantasyfeudalism.items.lighting.GlowOil.isOil(getCarried())&&lantern.is(Items.LANTERN)){
+                MountEquipment.refill(lantern,getCarried().is(com.fantasyfeudalism.items.content.Content.GLOW_OIL.get()));
                 if(horse!=null)com.fantasyfeudalism.items.lighting.LightItemFuel.resetProgress(horse);
                 if(!player.getAbilities().instabuild){getCarried().shrink(1);var bottle=new ItemStack(Items.GLASS_BOTTLE);if(getCarried().isEmpty())setCarried(bottle);else if(!player.getInventory().add(bottle))player.drop(bottle,false);}
                 getContainer().setChanged();broadcastChanges();return;

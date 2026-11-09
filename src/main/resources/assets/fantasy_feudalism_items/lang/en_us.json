@@ -90,5 +90,8 @@
   "tooltip.fantasy_feudalism_items.fuel.empty": "Fuel: Empty",
   "tooltip.fantasy_feudalism_items.fuel.unlimited": "Fuel: Unlimited",
   "tooltip.fantasy_feudalism_items.fuel.unlit": "Unlit",
-  "message.fantasy_feudalism_items.flint_too_worn": "Not enough flint and steel durability for this stack. Refresh fewer torches at a time."
+  "message.fantasy_feudalism_items.flint_too_worn": "Not enough flint and steel durability for this stack. Refresh fewer torches at a time.",
+  "item.fantasy_feudalism_items.glow_oil": "Glow Oil",
+  "tooltip.fantasy_feudalism_items.glow_oil": "Lantern fuel with twice the normal light reach.",
+  "tooltip.fantasy_feudalism_items.glow_fueled": "Glow Oil: enhanced illumination"
 }

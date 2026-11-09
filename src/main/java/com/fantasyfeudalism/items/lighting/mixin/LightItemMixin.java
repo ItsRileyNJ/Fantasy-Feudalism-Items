@@ -28,7 +28,7 @@ abstract class LightItemMixin {
     private void feudalItems$service(ItemStack light,ItemStack carried,Slot slot,ClickAction action,Player player,SlotAccess cursor,CallbackInfoReturnable<Boolean> result){
         if(!player.level().isClientSide){LightItemFuel.normalize(light);LightItemFuel.normalize(carried);}
         var state=LightItemFuel.state(light);if(state==null||action!=ClickAction.SECONDARY||!slot.allowModification(player))return;
-        boolean oil=light.is(Items.LANTERN)&&carried.is(Content.KELP_OIL.get());
+        boolean oil=light.is(Items.LANTERN)&&GlowOil.isOil(carried);
         boolean flint=(WeatherLighting.torch(state)||light.is(Items.SOUL_TORCH))&&carried.is(Items.FLINT_AND_STEEL);
         if(!oil&&!flint)return;
         if(flint&&!player.getAbilities().instabuild&&carried.isDamageableItem()&&carried.getMaxDamage()-carried.getDamageValue()<light.getCount()){
@@ -39,6 +39,7 @@ abstract class LightItemMixin {
             boolean empty=LightItemFuel.remaining(light)==0;
             LightItemFuel.setStage(light,3,flint||empty||LightItemFuel.lit(light));
             LightItemFuel.resetProgress(player,light);
+            if(oil)GlowOil.set(light,carried.is(Content.GLOW_OIL.get()));
             if(!player.getAbilities().instabuild){
                 if(oil){carried.shrink(1);var bottle=new ItemStack(Items.GLASS_BOTTLE);if(carried.isEmpty())cursor.set(bottle);else if(!player.getInventory().add(bottle))player.drop(bottle,false);}
                 else carried.hurtAndBreak(light.getCount(),player,LivingEntity.getSlotForHand(net.minecraft.world.InteractionHand.MAIN_HAND));

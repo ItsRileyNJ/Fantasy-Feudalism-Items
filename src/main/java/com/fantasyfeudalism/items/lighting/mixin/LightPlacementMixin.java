@@ -20,6 +20,7 @@ abstract class LightPlacementMixin {
         var data=captured.get().copyTag();
         if(data.contains("ff_fuel_stage"))LightFuel.setRemaining(level,context.getClickedPos(),LightItemFuel.boundary(LightFuel.capacity(state),data.getInt("ff_fuel_stage")));
         else if(data.contains("ff_fuel"))LightFuel.setRemaining(level,context.getClickedPos(),LightItemFuel.boundary(LightFuel.capacity(state),LightItemFuel.stageFor(data.getLong("ff_fuel"),LightFuel.capacity(state))));
+        if(state.is(net.minecraft.world.level.block.Blocks.LANTERN)){state=state.setValue(GlowOil.FUEL,data.getBoolean("ff_glow_oil"));level.setBlockAndUpdate(context.getClickedPos(),state);}
         if(data.getBoolean("ff_off")||LightFuel.remaining(level,context.getClickedPos())==0)level.setBlockAndUpdate(context.getClickedPos(),state.setValue(BlockStateProperties.LIT,false));
     }
 }

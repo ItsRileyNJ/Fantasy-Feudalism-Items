@@ -15,7 +15,7 @@ public final class LightInteractions {
         var player = event.getEntity();
         if (!WeatherLighting.supported(state.getBlock()) || !player.mayUseItemAt(pos, event.getFace(), event.getItemStack())) return;
         boolean lantern = state.is(Blocks.LANTERN) || state.is(Blocks.SOUL_LANTERN);
-        boolean oil = !player.isShiftKeyDown() && state.is(Blocks.LANTERN) && event.getItemStack().is(com.fantasyfeudalism.items.content.Content.KELP_OIL.get());
+        boolean oil = !player.isShiftKeyDown() && state.is(Blocks.LANTERN) && GlowOil.isOil(event.getItemStack());
         boolean relight = (WeatherLighting.torch(state)||state.is(Blocks.SOUL_TORCH)||state.is(Blocks.SOUL_WALL_TORCH)) && event.getItemStack().is(Items.FLINT_AND_STEEL);
         if (oil || (lantern && player.isShiftKeyDown()) || relight) {
             if (!level.isClientSide) {
@@ -23,6 +23,8 @@ public final class LightInteractions {
                 if (oil) {
                     boolean empty = LightFuel.remaining(server, pos) == 0;
                     LightFuel.refill(server, pos);
+                    state=state.setValue(GlowOil.FUEL,event.getItemStack().is(com.fantasyfeudalism.items.content.Content.GLOW_OIL.get()));
+                    level.setBlockAndUpdate(pos,state);
                     if (empty) level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, true));
                     player.setItemInHand(event.getHand(), net.minecraft.world.item.ItemUtils.createFilledResult(event.getItemStack(), player, new net.minecraft.world.item.ItemStack(Items.GLASS_BOTTLE)));
                 } else if (relight) {
