@@ -85,5 +85,10 @@
   "effect.fantasy_feudalism_items.attuned_player": "Player Trophy",
   "tooltip.fantasy_feudalism_items.trophy.replacement": "Breaking a trophy frees its slot. Broken trophies drop nothing.",
   "message.fantasy_feudalism_items.trophy_limit": "You already have a placed trophy of this type. Break it before placing another.",
-  "item.fantasy_feudalism_items.enderman_head": "Enderman Head"
+  "item.fantasy_feudalism_items.enderman_head": "Enderman Head",
+  "tooltip.fantasy_feudalism_items.fuel.stage": "Fuel: Stage %s/3",
+  "tooltip.fantasy_feudalism_items.fuel.empty": "Fuel: Empty",
+  "tooltip.fantasy_feudalism_items.fuel.unlimited": "Fuel: Unlimited",
+  "tooltip.fantasy_feudalism_items.fuel.unlit": "Unlit",
+  "message.fantasy_feudalism_items.flint_too_worn": "Not enough flint and steel durability for this stack. Refresh fewer torches at a time."
 }

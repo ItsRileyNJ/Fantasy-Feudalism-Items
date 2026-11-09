@@ -16,7 +16,7 @@ public final class LightInteractions {
         if (!WeatherLighting.supported(state.getBlock()) || !player.mayUseItemAt(pos, event.getFace(), event.getItemStack())) return;
         boolean lantern = state.is(Blocks.LANTERN) || state.is(Blocks.SOUL_LANTERN);
         boolean oil = !player.isShiftKeyDown() && state.is(Blocks.LANTERN) && event.getItemStack().is(com.fantasyfeudalism.items.content.Content.KELP_OIL.get());
-        boolean relight = WeatherLighting.torch(state) && !state.getValue(BlockStateProperties.LIT) && event.getItemStack().is(Items.FLINT_AND_STEEL);
+        boolean relight = (WeatherLighting.torch(state)||state.is(Blocks.SOUL_TORCH)||state.is(Blocks.SOUL_WALL_TORCH)) && event.getItemStack().is(Items.FLINT_AND_STEEL);
         if (oil || (lantern && player.isShiftKeyDown()) || relight) {
             if (!level.isClientSide) {
                 var server = (net.minecraft.server.level.ServerLevel) level;

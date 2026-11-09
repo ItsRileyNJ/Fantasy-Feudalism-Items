@@ -21,21 +21,27 @@ abstract class LightItemMixin {
     @Inject(method="use",at=@At("HEAD"),cancellable=true)
     private void feudalItems$toggle(Level level,Player player,InteractionHand hand,CallbackInfoReturnable<InteractionResultHolder<ItemStack>> result){
         var item=player.getItemInHand(hand);if(!player.isShiftKeyDown()||(!item.is(Items.LANTERN)&&!item.is(Items.SOUL_LANTERN)))return;
-        if(!level.isClientSide)LightItemFuel.set(item,LightItemFuel.remaining(item),!LightItemFuel.lit(item));
+        if(!level.isClientSide)LightItemFuel.setStage(item,LightItemFuel.stage(item),!LightItemFuel.lit(item));
         result.setReturnValue(InteractionResultHolder.sidedSuccess(item,level.isClientSide));
     }
     @Inject(method="overrideOtherStackedOnMe",at=@At("HEAD"),cancellable=true)
     private void feudalItems$service(ItemStack light,ItemStack carried,Slot slot,ClickAction action,Player player,SlotAccess cursor,CallbackInfoReturnable<Boolean> result){
+        if(!player.level().isClientSide){LightItemFuel.normalize(light);LightItemFuel.normalize(carried);}
         var state=LightItemFuel.state(light);if(state==null||action!=ClickAction.SECONDARY||!slot.allowModification(player))return;
         boolean oil=light.is(Items.LANTERN)&&carried.is(Content.KELP_OIL.get());
-        boolean flint=WeatherLighting.torch(state)&&carried.is(Items.FLINT_AND_STEEL);
+        boolean flint=(WeatherLighting.torch(state)||light.is(Items.SOUL_TORCH))&&carried.is(Items.FLINT_AND_STEEL);
         if(!oil&&!flint)return;
+        if(flint&&!player.getAbilities().instabuild&&carried.isDamageableItem()&&carried.getMaxDamage()-carried.getDamageValue()<light.getCount()){
+            player.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.fantasy_feudalism_items.flint_too_worn"),true);
+            result.setReturnValue(true);return;
+        }
         if(!player.level().isClientSide){
             boolean empty=LightItemFuel.remaining(light)==0;
-            LightItemFuel.set(light,LightFuel.capacity(state),flint||empty||LightItemFuel.lit(light));
+            LightItemFuel.setStage(light,3,flint||empty||LightItemFuel.lit(light));
+            LightItemFuel.resetProgress(player,light);
             if(!player.getAbilities().instabuild){
                 if(oil){carried.shrink(1);var bottle=new ItemStack(Items.GLASS_BOTTLE);if(carried.isEmpty())cursor.set(bottle);else if(!player.getInventory().add(bottle))player.drop(bottle,false);}
-                else carried.hurtAndBreak(1,player,LivingEntity.getSlotForHand(net.minecraft.world.InteractionHand.MAIN_HAND));
+                else carried.hurtAndBreak(light.getCount(),player,LivingEntity.getSlotForHand(net.minecraft.world.InteractionHand.MAIN_HAND));
             }
             slot.setChanged();
         }

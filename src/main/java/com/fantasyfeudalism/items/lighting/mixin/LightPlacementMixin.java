@@ -18,7 +18,8 @@ abstract class LightPlacementMixin {
         if(!result.getReturnValue().consumesAction()||!(context.getLevel() instanceof net.minecraft.server.level.ServerLevel level))return;
         var state=level.getBlockState(context.getClickedPos());if(!WeatherLighting.supported(state.getBlock()))return;
         var data=captured.get().copyTag();
-        if(data.contains("ff_fuel"))LightFuel.setRemaining(level,context.getClickedPos(),data.getLong("ff_fuel"));
+        if(data.contains("ff_fuel_stage"))LightFuel.setRemaining(level,context.getClickedPos(),LightItemFuel.boundary(LightFuel.capacity(state),data.getInt("ff_fuel_stage")));
+        else if(data.contains("ff_fuel"))LightFuel.setRemaining(level,context.getClickedPos(),LightItemFuel.boundary(LightFuel.capacity(state),LightItemFuel.stageFor(data.getLong("ff_fuel"),LightFuel.capacity(state))));
         if(data.getBoolean("ff_off")||LightFuel.remaining(level,context.getClickedPos())==0)level.setBlockAndUpdate(context.getClickedPos(),state.setValue(BlockStateProperties.LIT,false));
     }
 }

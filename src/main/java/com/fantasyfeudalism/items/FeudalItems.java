@@ -67,6 +67,7 @@ public final class FeudalItems {
         com.fantasyfeudalism.items.trophy.Trophies.init();
         com.fantasyfeudalism.items.trophy.TrophyAttunement.REGISTRY.register(bus);
         com.fantasyfeudalism.items.trophy.TrophyParticles.REGISTRY.register(bus);
+        com.fantasyfeudalism.items.lighting.TorchRefreshRecipe.init();
         com.fantasyfeudalism.items.trophy.TrophyRecipes.REGISTRY.register(bus);
         container.registerConfig(ModConfig.Type.SERVER, com.fantasyfeudalism.items.trophy.HeadDrops.SPEC, "fantasy_feudalism_items-head-drops.toml");
         NeoForge.EVENT_BUS.addListener(com.fantasyfeudalism.items.trophy.HeadDrops::drops);
@@ -89,6 +90,8 @@ public final class FeudalItems {
         container.registerConfig(ModConfig.Type.SERVER, com.fantasyfeudalism.items.lighting.LightFuel.SPEC, "fantasy_feudalism_items-fuel.toml");
         NeoForge.EVENT_BUS.addListener(com.fantasyfeudalism.items.lighting.LightFuel::tick);
         NeoForge.EVENT_BUS.addListener(com.fantasyfeudalism.items.lighting.LightItemFuel::itemTick);
+        NeoForge.EVENT_BUS.addListener(com.fantasyfeudalism.items.lighting.LightItemFuel::playerTick);
+        NeoForge.EVENT_BUS.addListener(com.fantasyfeudalism.items.lighting.LightItemFuel::containerOpened);
         NeoForge.EVENT_BUS.addListener(com.fantasyfeudalism.items.lighting.LightItemFuel::drops);
         EFFECTS.register(bus); POTIONS.register(bus); TABS.register(bus);
         bus.addListener(FeudalItems::network);

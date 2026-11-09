@@ -267,7 +267,8 @@ public final class ContentTests {
         h.succeedWhen(()->{
             h.assertTrue(h.getLevel().getGameTime()%20==0,"Wait for the fuel clock boundary");
             MountEquipment.tick(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(horse));
-            h.assertTrue(LightItemFuel.remaining(MountEquipment.item(horse,3))==80,"Mounted lantern burns fuel regardless of the mount's spawn tick");
+            h.assertTrue(LightItemFuel.stage(MountEquipment.item(horse,3))==1,"Partial burning leaves the shared stage unchanged");
+            h.assertTrue(horse.getPersistentData().getCompound("ff_light_progress").getCompound("mounted").getLong("Elapsed")==20,"Mounted countdown runs on the holder rather than the item, independent of mount age");
         });
     }
 
@@ -289,7 +290,7 @@ public final class ContentTests {
         LightItemFuel.set(lamp,80,true);MountEquipment.set(horse,3,lamp);
         h.assertTrue(data==horse.getData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT),"Timer-only updates do not resend mount visuals");
         h.assertTrue(decoded==MountVisuals.lantern(horse),"Repeated frames reuse decoded items");
-        h.assertTrue(LightItemFuel.remaining(MountEquipment.item(horse,3))==80,"Server still saves exact fuel");
+        h.assertTrue(LightItemFuel.stage(MountEquipment.item(horse,3))==1,"Server saves the shared fuel stage");
         LightItemFuel.set(lamp,0,false);MountEquipment.set(horse,3,lamp);
         h.assertTrue(data!=horse.getData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT),"Light-off transition is synchronized");
         h.assertFalse(LightItemFuel.lit(MountVisuals.lantern(horse)),"Cached light updates after attachment replacement");h.succeed();

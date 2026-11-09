@@ -365,3 +365,41 @@ exercise Enderman drop configuration at Looting 0 through IV, zero-chance
 suppression, Sigil eligibility, positive recipe assembly and rejection of plain
 Enderman/enchanted Dragon heads. Asset checks cover head/eye layers, inventory
 scale, item tags and stable full regeneration.
+
+### Stackable three-stage light fuel and torch refresh crafting
+
+Finite light items now store only a canonical 3/3, 2/3, 1/3 or empty fuel state
+plus on/off state. Full lit items have no extra fuel component and stack with
+fresh vanilla items. Legacy exact counters and last-burn timestamps are removed
+when normalizing inventory, opened containers, clicked stacks, drops or mounted
+lights. Unrelated names/components are preserved. Soul lights remain unlimited.
+Tooltips show the fuel stage, empty/unlimited state and whether the light is unlit.
+
+Continuous burn time retains the configured total, split into three equal thirds
+(with at most one tick of rounding). Partial-stage progress and duplicate-tick
+protection are saved on the holder/slot, not in item components. This progress
+survives save/load while the holder retains the light; only the quantized stage
+travels with moved/merged items or placement/drop transfers. Legacy counters and
+transfers round to the upper boundary of their current stage. Placed light
+countdowns remain in world saved data. Stored, unheld items pause. Mounted oil
+refills and player refreshes reset their relevant countdowns.
+
+Placed torches can be refreshed even while lit. Inventory stack servicing spends
+one flint-and-steel durability use per torch, rejecting a stack if the tool is too
+worn for it. The new crafting recipe accepts one flint and steel and one or more
+torch slots of the same item/components; each occupied slot consumes one torch
+and outputs one fully refueled torch. Its returned tool takes the corresponding
+wear and disappears on its final use. Insufficient-durability batches, lanterns,
+duplicate tools and incompatible named torches are rejected. Player crafting
+uses vanilla's damage/enchantment handling, including creative durability rules;
+non-player remainder queries use raw wear. Recipe previews don't mutate inputs.
+
+Validation: full build, shader checks and **74/74 server tests** passed. New tests
+cover canonical legacy conversion, stack equality within stages, full-item merge
+with fresh torches, three-third budgets, stage changes, duplicate hooks, saved
+holder counters, actual recipe lookup, multi-slot and bulk crafting, worn tools,
+last-use breakage, preservation of custom names, manual/crafting wear parity and
+refresh of lit placed torches. Existing mount, weather, placement, fuel, render
+predicate and light-hand tests were updated to the stage contract and passed.
+Recipe, unlock and tooltip regeneration checks also passed. The hover layout has
+not been verified in a graphical client under the existing display limitation.

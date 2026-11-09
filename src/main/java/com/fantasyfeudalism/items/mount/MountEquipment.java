@@ -21,6 +21,7 @@ public final class MountEquipment {
     public static boolean supported(Entity entity){return entity.getType()==EntityType.HORSE||entity.getType()==EntityType.DONKEY||entity.getType()==EntityType.MULE;}
     public static ItemStack item(AbstractHorse horse,int slot){var data=horse.getPersistentData().getCompound("ff_equipment_"+slot);return data.isEmpty()?ItemStack.EMPTY:ItemStack.parse(horse.registryAccess(),data).orElse(ItemStack.EMPTY);}
     public static void set(AbstractHorse horse,int slot,ItemStack stack){
+        LightItemFuel.normalize(stack);
         if(stack.isEmpty())horse.getPersistentData().remove("ff_equipment_"+slot);else horse.getPersistentData().put("ff_equipment_"+slot,stack.save(horse.registryAccess()));
         var visuals=horse.getData(com.fantasyfeudalism.items.content.ModAttachments.MOUNT).copy();
         var display=stack.copy();display.remove(DataComponents.CONTAINER);
@@ -68,11 +69,10 @@ public final class MountEquipment {
         for(int i=2;i<=4;i++){var stack=item(horse,i);if(!stack.isEmpty()){event.getDrops().add(new net.minecraft.world.entity.item.ItemEntity(horse.level(),horse.getX(),horse.getY(),horse.getZ(),stack));set(horse,i,ItemStack.EMPTY);}}
     }
     public static void damage(LivingIncomingDamageEvent event){if(event.getEntity() instanceof Horse horse&&event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_FALL)&&item(horse,2).getItem() instanceof Horseshoe shoe)event.setAmount((float)(event.getAmount()*(1-shoe.fall)));}
-    public static long remaining(ItemStack lantern){if(lantern.is(Items.SOUL_LANTERN))return Long.MAX_VALUE;var tag=lantern.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();return tag.contains("ff_fuel")?tag.getLong("ff_fuel"):LightFuel.capacity(net.minecraft.world.level.block.Blocks.LANTERN.defaultBlockState());}
-    public static boolean lit(ItemStack lantern){var tag=lantern.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();return !tag.getBoolean("ff_off")&&remaining(lantern)>0;}
-    private static void fuel(ItemStack lantern,long remaining,boolean lit){CustomData.update(DataComponents.CUSTOM_DATA,lantern,tag->{tag.putLong("ff_fuel",remaining);tag.putBoolean("ff_off",!lit);});}
-    public static void toggle(ItemStack lantern){fuel(lantern,remaining(lantern),!lit(lantern));}
-    public static void refill(ItemStack lantern){boolean wasEmpty=remaining(lantern)==0;fuel(lantern,LightFuel.capacity(net.minecraft.world.level.block.Blocks.LANTERN.defaultBlockState()),wasEmpty||lit(lantern));}
+    public static long remaining(ItemStack lantern){return LightItemFuel.remaining(lantern);}
+    public static boolean lit(ItemStack lantern){return LightItemFuel.lit(lantern);}
+    public static void toggle(ItemStack lantern){LightItemFuel.setStage(lantern,LightItemFuel.stage(lantern),!lit(lantern));}
+    public static void refill(ItemStack lantern){boolean wasEmpty=remaining(lantern)==0;LightItemFuel.setStage(lantern,3,wasEmpty||lit(lantern));}
     public static void tick(EntityTickEvent.Post event){
         if(!(event.getEntity() instanceof AbstractHorse horse)||horse.level().isClientSide||!supported(horse)||horse.level().getGameTime()%20!=0)return;
         apply(horse);
